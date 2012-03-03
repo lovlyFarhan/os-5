@@ -1,8 +1,9 @@
 
+from virtual_machine import VirtualMachine
 
 class RealMachine:
     def __init__():
-        self.vm_memory = {}
-
+        self.memory = {}
+        self.vm = VirtualMachine(self.memory)
 
 
