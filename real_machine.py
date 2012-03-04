@@ -15,7 +15,7 @@ class RealMachine():
         self.memory = {i : "" for i in ("%X" %i for i in range(256))}
     
     def start_vm(self, file_name):
-        self.vm = VirtualMachine(Proccess(file_name, self.memory))
+        self.vm = VirtualMachine(Proccess(file_name), self.memory)
 
 
 
