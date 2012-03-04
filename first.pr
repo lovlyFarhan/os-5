@@ -1,0 +1,28 @@
+#išraiška 50 + 100 - 24 * 5
+#
+#
+DATA
+DW 50
+DW 100
+DW 24
+DW 5
+DB rezu
+DB ltat
+DB as:
+CODE
+DS00
+DS01
+#comment
+ADD
+DS02
+DS03
+MUL
+SUB
+DS04
+PUTS
+DS05
+PUTS
+DS06
+PUTS
+PUTI
+HALT
