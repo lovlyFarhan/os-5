@@ -10,12 +10,12 @@ class VirtualMachine:
         self.SP = self.SS
         
     def fill_mem(self, proc):
-        for i in range(1,40):
+        for i in range(1,64):
             code = proc.commands.index('CODE')
             if i < len(proc.commands)and i < code:
-                c = hex(i-1)[2:]
+                c = hex(i)[2:]
                 self.memory[c] = proc.commands[i]
-        for i in range(40,256):
+        for i in range(64,256):
             c = hex(i)[2:]
             if code < len(proc.commands):
                 self.memory[c] = proc.commands[code]
