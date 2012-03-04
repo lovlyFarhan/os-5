@@ -11,5 +11,5 @@ class VirtualMachine:
         fill_mem(proc)
 
 
-    def fill_mem(self, proc)
+    def fill_mem(self, proc):
         pass   
