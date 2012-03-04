@@ -1,6 +1,6 @@
 
 
-class VirtualMachine:
+class VirtualMachine():
     def __init__(self, proc, rm_memory):
         self.memory = rm_memory
         self.DS = "00"
