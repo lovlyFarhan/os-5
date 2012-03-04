@@ -16,6 +16,7 @@ class RealMachine():
     
     def start_vm(self, file_name):
         self.vm = VirtualMachine(Proccess(file_name), self.memory)
+        
 
 
 

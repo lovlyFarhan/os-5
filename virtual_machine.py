@@ -8,8 +8,12 @@ class VirtualMachine:
         self.SS = "A0"
         self.IP = self.CS
         self.SP = self.SS
-        fill_mem(proc)
-
-
+        
     def fill_mem(self, proc):
-        pass   
+        for i in range(256):
+            if i < len(proc.commands):
+                self.memory[i] = proc.commands[i]
+            else:
+                self.memory[i] = ""
+            
+            
