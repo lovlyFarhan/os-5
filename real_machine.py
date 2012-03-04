@@ -9,14 +9,21 @@ class Proccess():
 
 class RealMachine():
     def __init__(self):
-        self.clear_mem
+        self.clear_mem()
         
     def clear_mem(self):
         self.memory = {i : "" for i in ("%X" %i for i in range(256))}
+<<<<<<< HEAD
     
+    def start_vm(self, file_name):
+        self.vm = VirtualMachine(Proccess(file_name), self.memory)
+=======
+>>>>>>> master
+
     def start_vm(self, file_name):
         self.vm = VirtualMachine(Proccess(file_name), self.memory)
 
 
-
+rm = RealMachine()
+rm.start_vm('first.pr')
 
