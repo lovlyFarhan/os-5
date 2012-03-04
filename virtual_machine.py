@@ -9,7 +9,7 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.fill_mem(proc)
-
+        self.exec_commands()
 
     def fill_mem(self, proc):
         DS = proc.commands[1:proc.commands.index("CODE")]
@@ -27,5 +27,14 @@ class VirtualMachine():
             self.memory["%X" %CS_counter] = cmd
             CS_counter += 1
 
-        print(self.memory)
-            
+    def exec_commands(self):
+        ip = int(self.IP, 16)
+        while(self.memory["%X" %ip] != "HALT"):
+            cmd = self.memory["%X" %ip]
+            if(cmd == "PUTS"):
+                print("takim makaram vse kamandy...")
+            ip += 1
+
+
+
+
