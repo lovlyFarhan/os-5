@@ -30,8 +30,6 @@ class VirtualMachine():
         sp = int(self.SP, 16)
         while(self.memory["%X" %ip] != "HALT"):
             cmd = self.memory["%X" %ip]
-            if(cmd == "PUTS"):
-                print("takim makaram vse kamandy...")
             ip += 1
             if (cmd[:2] == 'DS'):
                 sp += 1
@@ -45,6 +43,9 @@ class VirtualMachine():
             if (cmd == 'SUB'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] - self.memory["%X" %sp]
                 sp -= 1
-                print(self.memory['A1'])
-                
+            if(cmd == 'PUTS'):
+                print(self.memory["%X" %sp])
+                sp -= 1 
+            if(cmd == 'PUTI'):
+                print(self.memory["%X" %sp])
     
