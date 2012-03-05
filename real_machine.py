@@ -1,5 +1,4 @@
 from virtual_machine import VirtualMachine
-import gtk
 
 class Proccess():
     def __init__(self, file_name):
