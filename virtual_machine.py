@@ -64,7 +64,7 @@ class VirtualMachine():
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] | self.memory["%X" %sp]
                 sp -= 1
             if(cmd == 'READ'):
-                self.memory["%X" %sp] = sys.stdin.readline()
+                self.memory["%X" %sp] = sys.stdin.readline() # = intput()
             if(cmd == 'CMP'):
                 if (self.memory["%X" %(sp-1)] == self.memory["%X" %sp]):
                     self.memory["%X" %sp] = 1
@@ -74,6 +74,7 @@ class VirtualMachine():
                     self.memory["%X" %sp] = 2
                 sp -= 1
                 
+            
                                    
                 
                 
