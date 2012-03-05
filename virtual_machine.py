@@ -34,18 +34,30 @@ class VirtualMachine():
             if (cmd[:2] == 'DS'):
                 sp += 1
                 self.memory["%X" %sp] = self.memory[cmd[3:]]
+            if (cmd[:2] == 'SD'):
+                self.memory[cmd[3:]] = self.memory["%X" %sp]
+                sp -= 1
             if (cmd == 'ADD'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] + self.memory["%X" %sp]
+                sp -= 1
+            if (cmd == 'SUB'):
+                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] - self.memory["%X" %sp]
                 sp -= 1
             if (cmd == 'MUL'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] * self.memory["%X" %sp]
                 sp -= 1
-            if (cmd == 'SUB'):
-                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] - self.memory["%X" %sp]
+            if (cmd == 'DIV'):
+                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] / self.memory["%X" %sp]
                 sp -= 1
             if(cmd == 'PUTS'):
                 print(self.memory["%X" %sp])
                 sp -= 1 
             if(cmd == 'PUTI'):
                 print(self.memory["%X" %sp])
-    
+                sp -= 1
+            if(cmd == 'AND'):
+                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] & self.memory["%X" %sp]
+                sp -= 1
+            if(cmd == 'OR'):
+                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] | self.memory["%X" %sp]
+                sp -= 1
