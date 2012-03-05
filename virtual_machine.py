@@ -1,3 +1,5 @@
+import sys
+
 class VirtualMachine():
     def __init__(self, proc, rm_memory):
         self.memory = rm_memory
@@ -61,3 +63,17 @@ class VirtualMachine():
             if(cmd == 'OR'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] | self.memory["%X" %sp]
                 sp -= 1
+            if(cmd == 'READ'):
+                self.memory["%X" %sp] = sys.stdin.readline()
+            if(cmd == 'CMP'):
+                if (self.memory["%X" %(sp-1)] == self.memory["%X" %sp]):
+                    self.memory["%X" %sp] = 1
+                if (self.memory["%X" %(sp-1)] > self.memory["%X" %sp]):
+                    self.memory["%X" %sp] = 0
+                else:
+                    self.memory["%X" %sp] = 2
+                sp -= 1
+                
+                                   
+                
+                
