@@ -5,7 +5,7 @@ DW 24
 DW 5
 DB rezu
 DB ltat
-DB as:
+DB as\n:
 CODE
 DS00
 DS01

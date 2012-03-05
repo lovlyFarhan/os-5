@@ -1,4 +1,3 @@
-import sys
 
 class VirtualMachine():
     def __init__(self, proc, rm_memory):
@@ -36,39 +35,39 @@ class VirtualMachine():
             if (cmd[:2] == 'DS'):
                 sp += 1
                 self.memory["%X" %sp] = self.memory[cmd[3:]]
-            if (cmd[:2] == 'SD'):
+            elif (cmd[:2] == 'SD'):
                 self.memory[cmd[3:]] = self.memory["%X" %sp]
                 sp -= 1
-            if (cmd == 'ADD'):
+            elif (cmd == 'ADD'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] + self.memory["%X" %sp]
                 sp -= 1
-            if (cmd == 'SUB'):
+            elif (cmd == 'SUB'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] - self.memory["%X" %sp]
                 sp -= 1
-            if (cmd == 'MUL'):
+            elif (cmd == 'MUL'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] * self.memory["%X" %sp]
                 sp -= 1
-            if (cmd == 'DIV'):
+            elif (cmd == 'DIV'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] / self.memory["%X" %sp]
                 sp -= 1
-            if(cmd == 'PUTS'):
-                print(self.memory["%X" %sp])
+            elif(cmd == 'PUTS'):
+                print(self.memory["%X" %sp].replace("\\n", "\n"), end="")
                 sp -= 1 
-            if(cmd == 'PUTI'):
-                print(self.memory["%X" %sp])
+            elif(cmd == 'PUTI'):
+                print(self.memory["%X" %sp], end="")
                 sp -= 1
-            if(cmd == 'AND'):
+            elif(cmd == 'AND'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] & self.memory["%X" %sp]
                 sp -= 1
-            if(cmd == 'OR'):
+            elif(cmd == 'OR'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] | self.memory["%X" %sp]
                 sp -= 1
-            if(cmd == 'READ'):
-                self.memory["%X" %sp] = sys.stdin.readline() # = intput()
-            if(cmd == 'CMP'):
+            elif(cmd == 'READ'):
+                self.memory["%X" %sp] = intput()
+            elif(cmd == 'CMP'):
                 if (self.memory["%X" %(sp-1)] == self.memory["%X" %sp]):
                     self.memory["%X" %sp] = 1
-                if (self.memory["%X" %(sp-1)] > self.memory["%X" %sp]):
+                elif (self.memory["%X" %(sp-1)] > self.memory["%X" %sp]):
                     self.memory["%X" %sp] = 0
                 else:
                     self.memory["%X" %sp] = 2
