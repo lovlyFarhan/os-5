@@ -39,6 +39,12 @@ class VirtualMachine():
             if (cmd == 'ADD'):
                 self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] + self.memory["%X" %sp]
                 sp -= 1
+            if (cmd == 'MUL'):
+                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] * self.memory["%X" %sp]
+                sp -= 1
+            if (cmd == 'SUB'):
+                self.memory["%X" %(sp-1)] = self.memory["%X" %(sp-1)] - self.memory["%X" %sp]
+                sp -= 1
                 print(self.memory['A1'])
-                 
+                
     
