@@ -71,18 +71,18 @@ class VirtualMachine():
             elif(cmd == 'NOT'):
                 self.memory[self.SP] = not(self.memory[self.SP])
             elif(cmd[:2] == 'JP'):
-                self.IP = 16 * cmd[-2:-1] + cmd[:3]
+                self.IP = int(cmd[2:])
             elif(cmd[:2] == 'JE'):
                 if(self.memory[self.SP] == 1):
-                    self.IP = 16 * cmd[-2:-1] + cmd[:3]
+                    self.IP = int(cmd[2:])
                 self.SP -= 1
             elif(cmd[:2] == 'JL'):
                 if(self.memory[self.SP] == 0):
-                    self.IP = 16 * cmd[-2:-1] + cmd[:3]
+                    self.IP = int(cmd[2:])
                 self.SP -= 1
             elif(cmd[:2] == 'JG'):
                 if(self.memory[self.SP] == 2):
-                    self.IP = 16 * cmd[-2:-1] + cmd[:3]
+                    self.IP = int(cmd[2:])
                 self.SP -= 1
             
                 
