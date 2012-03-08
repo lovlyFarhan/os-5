@@ -30,7 +30,7 @@ class VirtualMachine():
                 self.SP += 1
                 self.memory[self.SP] = self.memory[int(cmd[2:])]
             elif (cmd[:2] == 'SD'):
-                self.memory[cmd[2:]] = self.memory[self.SP]
+                self.memory[cmd[2:]] = self.memory[self.SP] 
                 self.SP -= 1
             elif (cmd == 'ADD'):
                 self.memory[self.SP-1] = self.memory[self.SP-1] + self.memory[self.SP]
