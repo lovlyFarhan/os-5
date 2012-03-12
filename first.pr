@@ -1,3 +1,4 @@
+#expression 50 + 100 - 24 * 5
 DATA
 DW 50
 DW 100

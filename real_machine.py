@@ -1,4 +1,6 @@
 from virtual_machine import VirtualMachine
+from sys import argv
+
 
 class Proccess():
     def __init__(self, file_name):
@@ -19,4 +21,5 @@ class RealMachine():
 
 
 rm = RealMachine()
-rm.start_vm('first.pr')
+rm.start_vm(argv[1])
+#rm.start_vm('first.pr')

@@ -79,7 +79,7 @@ class VirtualMachine():
                 else:
                     self.memory[self.SP] = 0
             elif(DR[:2] == 'JP'):
-                self.IP = int(DR[2:])
+                self.IP = self.CS + int(DR[2:])
             elif(DR[:2] == 'JE'):
                 if(self.memory[self.SP] == 1):
                     self.IP = self.CS + int(DR[2:])
@@ -94,9 +94,4 @@ class VirtualMachine():
                 self.SP -= 1
             
                 
-                
-                
-            
-                                   
-                
-                
+                              
