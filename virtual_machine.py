@@ -37,44 +37,44 @@ class VirtualMachine():
                 self.SP += 1
                 self.memory[self.SP] = self.memory[self.DS + int(DR[2:])]
             elif (DR[:2] == 'SD'):
-                self.memory[self.DS + DR[2:]] = self.memory[self.SP] 
+                self.memory[self.DS + int(DR[2:])] = self.memory[self.SP] 
                 self.SP -= 1
             elif (DR == 'ADD'):
-                self.memory[self.SP - 1] = self.memory[self.SP - 1] + self.memory[self.SP]
+                self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) + int(self.memory[self.SP])
                 self.SP -= 1
             elif (DR == 'SUB'):
-                self.memory[self.SP - 1] = self.memory[self.SP - 1] - self.memory[self.SP]
+                self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) - int(self.memory[self.SP])
                 self.SP -= 1
             elif (DR == 'MUL'):
-                self.memory[self.SP - 1] = self.memory[self.SP - 1] * self.memory[self.SP]
+                self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) * int(self.memory[self.SP])
                 self.SP -= 1
             elif (DR == 'DIV'):
-                self.memory[self.SP - 1] = int(self.memory[self.SP - 1] / self.memory[self.SP])
+                self.memory[self.SP - 1] = int(int(self.memory[self.SP - 1]) / int(self.memory[self.SP]))
                 self.SP -= 1
             elif(DR == 'ECHO'):
                 print(self.memory[self.SP], end="")
                 self.SP -= 1 
             elif(DR == 'AND'):
-                self.memory[self.SP - 1] = self.memory[self.SP - 1] & self.memory[self.SP]
+                self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) & int(self.memory[self.SP])
                 self.SP -= 1
             elif(DR == 'OR'):
-                self.memory[self.SP - 1] = self.memory[self.SP - 1] | self.memory[self.SP]
+                self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) | int(self.memory[self.SP])
                 self.SP -= 1
             elif(DR == 'READ'):
                 self.SP += 1
-                self.memory[self.SP] = input()
+                self.memory[self.SP] = input()[:4]
             elif(DR == 'CMP'):
-                if (self.memory[self.SP - 1] == self.memory[self.SP]):
+                if (int(self.memory[self.SP - 1]) == int(self.memory[self.SP])):
                     self.memory[self.SP - 1] = 1
-                elif (self.memory[self.SP - 1] > self.memory[self.SP]):
+                elif (int(self.memory[self.SP - 1]) > int(self.memory[self.SP])):
                     self.memory[self.SP - 1] = 0
                 else:
                     self.memory[self.SP - 1] = 2
                 self.SP -= 1
             elif(DR == 'NEG'):
-                self.memory[self.SP] = 0 - self.memory[self.SP]
+                self.memory[self.SP] = int(-self.memory[self.SP])
             elif(DR == 'NOT'):
-                if(self.memory[self.SP] == 0):
+                if(int(self.memory[self.SP]) == 0):
                     self.memory[self.SP] = 1
                 else:
                     self.memory[self.SP] = 0
@@ -82,15 +82,15 @@ class VirtualMachine():
                 self.IP = int(DR[2:])
             elif(DR[:2] == 'JE'):
                 if(self.memory[self.SP] == 1):
-                    self.IP = int(DR[2:])
+                    self.IP = self.CS + int(DR[2:])
                 self.SP -= 1
             elif(DR[:2] == 'JL'):
                 if(self.memory[self.SP] == 0):
-                    self.IP = int(DR[2:])
+                    self.IP = self.CS + int(DR[2:])
                 self.SP -= 1
             elif(DR[:2] == 'JG'):
                 if(self.memory[self.SP] == 2):
-                    self.IP = int(DR[2:])
+                    self.IP = self.CS + int(DR[2:])
                 self.SP -= 1
             
                 
