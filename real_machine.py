@@ -3,8 +3,9 @@ from virtual_machine import VirtualMachine
 class Proccess():
     def __init__(self, file_name):
         file = open(file_name, 'r')
-        self.commands = [line.rstrip('\n') for line in file if line[0] != '#']
-
+        self.commands = [line.rstrip('\n').replace('\\n', '\n')
+                for line in file if line[0] != '#']
+        
 
 class RealMachine():
     def __init__(self):
