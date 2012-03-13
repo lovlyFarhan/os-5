@@ -14,7 +14,7 @@ class RealMachine():
         self.clear_mem()
         
     def clear_mem(self):
-        self.memory = {i : "" for i in (i for i in range(256))}
+        self.memory = {i : "" for i in range(256)}
     
     def start_vm(self, file_name):
         self.vm = VirtualMachine(Proccess(file_name), self.memory)

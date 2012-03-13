@@ -14,19 +14,15 @@ class VirtualMachine():
     def fill_mem(self, proc):
         DS = proc.commands[1:proc.commands.index("CODE")]
         CS = proc.commands[proc.commands.index("CODE") + 1:]
-        DR = 0
 
-        for cmd in DS:
+        for cmd, DR in zip(DS, range(DS.__len__())):
             if(cmd[0:2] == "DW"):
                 self.memory[self.DS + DR] = int(cmd[3:])
             else:
                 self.memory[self.DS + DR] = cmd[3:]
-            DR += 1
         
-        DR = 0
-        for cmd in CS:
+        for cmd, DR in zip(CS, range(CS.__len__())):
             self.memory[self.CS + DR] = cmd
-            DR += 1
     
     
     def exec_commands(self):
