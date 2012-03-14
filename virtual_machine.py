@@ -1,4 +1,3 @@
-
 class VirtualMachine():
     def __init__(self, proc, rm_memory):
         self.memory = rm_memory
@@ -8,7 +7,7 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.fill_mem(proc)
-        self.exec_commands()
+        #self.exec_commands()
 
 
     def fill_mem(self, proc):
@@ -23,7 +22,6 @@ class VirtualMachine():
         
         for cmd, DR in zip(CS, range(CS.__len__())):
             self.memory[self.CS + DR] = cmd
-    
     
     def exec_commands(self):
         while(self.memory[self.IP] != "HALT"):
