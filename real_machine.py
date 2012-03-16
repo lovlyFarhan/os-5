@@ -16,7 +16,3 @@ class RealMachine():
     
     def start_vm(self, file_name):
         self.vm = VirtualMachine(Proccess(file_name), self.memory)
-
-#rm = RealMachine()
-#rm.start_vm(argv[1])
-#rm.start_vm('first.pr')
