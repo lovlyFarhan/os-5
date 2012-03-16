@@ -8,7 +8,6 @@ class Proccess():
                 for line in file if line[0] != '#']
 
 
-
 class RealMachine():
     def __init__(self):
         self.clear_mem()
@@ -52,10 +51,3 @@ class RealMachine():
         proc = Proccess(file_name)
         page = self.fill_mem(proc)
         self.vm = VirtualMachine(proc, page, self.memory)
-
-from sys import argv
-
-rm = RealMachine()
-rm.start_vm(argv[1])
-rm.start_vm(argv[2])
-rm.start_vm(argv[3])

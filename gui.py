@@ -6,7 +6,8 @@ class RMWindow(QtGui.QMainWindow):
     def __init__(self):
         
         self.rm = RealMachine()
-        self.row = self.column = 15
+        self.row = 60 
+        self.column = 16
         self.rm_window = None
         
         super(RMWindow, self).__init__()
@@ -33,13 +34,13 @@ class RMWindow(QtGui.QMainWindow):
     def fill(self):
         for i in range(self.row):
             for j in range(self.column):
-                item1 = QtGui.QTableWidgetItem(str(self.rm.vm.memory[16 * i + j]))
+                item1 = QtGui.QTableWidgetItem(str(self.rm.memory[16 * i + j]))
                 self.tableWidget.setItem(i, j, item1)
                 
     def init_table(self, row):
         self.tableWidget = QtGui.QTableWidget(self.centralWidget)
         self.tableWidget.setEnabled(True)
-        self.tableWidget.setGeometry(QtCore.QRect(20, 20, 697, 297))
+        self.tableWidget.setGeometry(QtCore.QRect(20, 20, 766, 297))
         self.tableWidget.setColumnCount(self.column)
         self.tableWidget.setRowCount(self.row)
         self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
@@ -53,11 +54,10 @@ class RMWindow(QtGui.QMainWindow):
 class VMWindow(QtGui.QFrame, RMWindow):
     def __init__(self, main_window):
         
-        self.row = self.column = 15
+        self.row = self.column = 16
         self.main_window = main_window
         
         super(VMWindow, self).__init__()
-        self.row = self.column = 15
         self.resize(1366,320)
         self.move(self.frameGeometry().bottomLeft())
         self.setWindowTitle(self.tr('VirtualMachine'))
@@ -65,7 +65,6 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.centralWidget.setEnabled(True)
         
         self.init_table(self.row)
-        #self.fill()
         
         
       

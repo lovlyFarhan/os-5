@@ -7,7 +7,7 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.memory = {i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
-        self.exec_commands()
+#        self.exec_commands()
 
     def exec_commands(self):
         while(self.memory[self.IP] != "HALT"):
