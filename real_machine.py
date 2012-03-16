@@ -17,7 +17,7 @@ class RealMachine():
 
 
     def clear_mem(self):
-        self.memory = {i : "" for i in range(512)}
+        self.memory = {i : "" for i in range(1024)}
 
 
     def get_new_page(self):
@@ -25,7 +25,7 @@ class RealMachine():
             self.paging_table.append(0)
             return 0
         else:
-            for i in range(self.paging_table.max + 1):
+            for i in range(max(self.paging_table) + 2):
                 if i not in self.paging_table:
                     self.paging_table.append(i)
                     return i
@@ -58,7 +58,8 @@ from sys import argv
 
 rm = RealMachine()
 rm.start_vm(argv[1])
-#rm.start_vm('first.pr')
+rm.start_vm(argv[2])
+rm.start_vm(argv[3])
 
 
 
