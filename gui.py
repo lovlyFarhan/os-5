@@ -8,7 +8,7 @@ class RMWindow(QtGui.QMainWindow):
         self.rm = RealMachine()
         self.row = 64 
         self.column = 16
-        self.rm_window = None
+        self.vm_window = None
         
         super(RMWindow, self).__init__()
         self.resize(1366,320)
@@ -27,10 +27,9 @@ class RMWindow(QtGui.QMainWindow):
         
     def run(self):
         self.rm.start_vm('first.pr')
-        self.rm_window = VMWindow(self.rm.vm.memory)
         self.fill_rm()
-        self.rm_window.show()
-        
+        self.vm_window = VMWindow(self.rm.vm.memory)
+        self.vm_window.show()
          
     def fill_rm(self):
         for i in range(self.row):
