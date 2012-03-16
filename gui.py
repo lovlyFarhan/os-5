@@ -28,7 +28,8 @@ class RMWindow(QtGui.QMainWindow):
     def run(self):
         self.rm.start_vm('first.pr')
         self.fill_rm()
-        self.vm_window = VMWindow(self.rm.vm.memory)
+        if not self.vm_window:
+            self.vm_window = VMWindow(self.rm.vm.memory)
         self.vm_window.show()
          
     def fill_rm(self):
