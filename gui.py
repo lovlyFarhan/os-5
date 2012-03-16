@@ -6,7 +6,7 @@ class RMWindow(QtGui.QMainWindow):
     def __init__(self):
         
         self.rm = RealMachine()
-        self.row = 60 
+        self.row = 64 
         self.column = 16
         self.rm_window = None
         
@@ -24,18 +24,19 @@ class RMWindow(QtGui.QMainWindow):
         self.pushButton.setGeometry(QtCore.QRect(800, 20, 97, 27))
         self.pushButton.setText("Load")
         self.pushButton.clicked.connect(self.run)
-    
+        
     def run(self):
         self.rm.start_vm('first.pr')
-        self.rm_window = VMWindow(main_window = self)
+        self.rm_window = VMWindow(self.rm.vm.memory)
+        self.fill_rm()
         self.rm_window.show()
-        self.fill()
+        
          
-    def fill(self):
+    def fill_rm(self):
         for i in range(self.row):
             for j in range(self.column):
-                item1 = QtGui.QTableWidgetItem(str(self.rm.memory[16 * i + j]))
-                self.tableWidget.setItem(i, j, item1)
+                item = QtGui.QTableWidgetItem(str(self.rm.memory[16 * i + j]))
+                self.tableWidget.setItem(i, j, item)
                 
     def init_table(self, row):
         self.tableWidget = QtGui.QTableWidget(self.centralWidget)
@@ -52,23 +53,26 @@ class RMWindow(QtGui.QMainWindow):
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
                 
 class VMWindow(QtGui.QFrame, RMWindow):
-    def __init__(self, main_window):
-        
+    def __init__(self, memory):
         self.row = self.column = 16
-        self.main_window = main_window
+        self.memory = memory
         
         super(VMWindow, self).__init__()
         self.resize(1366,320)
         self.move(self.frameGeometry().bottomLeft())
-        self.setWindowTitle(self.tr('VirtualMachine'))
+        self.setWindowTitle(self.tr('Virtual Machine'))
         self.centralWidget = QtGui.QWidget(self)
         self.centralWidget.setEnabled(True)
-        
         self.init_table(self.row)
         
+        self.fill_vm()
         
-      
-              
+    def fill_vm(self):
+        for i in range(self.row):
+            for j in range(self.column):
+                item = QtGui.QTableWidgetItem(str(self.memory[16 * i + j]))
+                self.tableWidget.setItem(i, j, item)
+        
 myApp = QtGui.QApplication(sys.argv)
 gui = RMWindow()
 gui.show()
