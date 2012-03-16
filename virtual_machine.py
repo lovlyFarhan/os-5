@@ -1,28 +1,14 @@
+
 class VirtualMachine():
-    def __init__(self, proc, rm_memory):
-        self.memory = rm_memory
-        self.DS = 0
-        self.CS = 64
-        self.SS = 160
+    def __init__(self, proc, page, rm_memory):
+        self.DS = 0 + page
+        self.CS = 64 + page
+        self.SS = 160 + page
         self.IP = self.CS
         self.SP = self.SS
-        self.fill_mem(proc)
-        #self.exec_commands()
+        self.memory = {i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
+        self.exec_commands()
 
-
-    def fill_mem(self, proc):
-        DS = proc.commands[1:proc.commands.index("CODE")]
-        CS = proc.commands[proc.commands.index("CODE") + 1:]
-
-        for cmd, DR in zip(DS, range(DS.__len__())):
-            if(cmd[0:2] == "DW"):
-                self.memory[self.DS + DR] = int(cmd[3:])
-            else:
-                self.memory[self.DS + DR] = cmd[3:]
-        
-        for cmd, DR in zip(CS, range(CS.__len__())):
-            self.memory[self.CS + DR] = cmd
-    
     def exec_commands(self):
         while(self.memory[self.IP] != "HALT"):
             DR = self.memory[self.IP]
@@ -86,6 +72,8 @@ class VirtualMachine():
                 if(self.memory[self.SP] == 2):
                     self.IP = self.CS + int(DR[2:])
                 self.SP -= 1
-            
+            #elif(self.memory[self.IP] != "HALT"):
+            #    return True
+            #return False
                 
                               
