@@ -1,6 +1,7 @@
 
 class VirtualMachine():
     def __init__(self, proc, page, rm_memory):
+        self.PAGE = page
         self.DS = 0 + page
         self.CS = 64 + page
         self.SS = 160 + page
@@ -80,5 +81,7 @@ class VirtualMachine():
         elif(DR == "HALT"):
             return True
         return False
+
+
             
                           

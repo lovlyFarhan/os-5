@@ -2,58 +2,12 @@ Operating Systems course task 2
 implement simulation OS in desired language(we are writing in python3)
 Tadas branch
 
-
-
-v 2 semestre v paskalie ja pisal bin_to_dec i dec_to_bin paidzieji radavicius skazal zdelac lutse s lubova v luboj, 
-ale tagda ja ne umel iscio. za to vsio sto ja ranse ne umel, ja starajus kagdanibud' zdelac. astalsia iscio sudoku solver
-pasmatri, nie zaszkodzi
-
-
-letters = [chr(i) for i in range(ord('A'), ord('Z') + 1)]
-
-def get_val(number):
-    if(number <= 9):
-        return str(number)
-    else:
-        return letters[number - 10]
-
-def dec_to_any(number, base):
-    remain = number
-    result = ""
-    while(number >= base):
-        rest = int(number / base)
-        remain = number % base
-        number = rest
-        result += get_val(remain)
-    result += get_val(number)
-    return result[::-1]
-
-numbers = [str(i) for i in range(10)]
-
-def val_get(number):
-    if(number in numbers):
-        return number
-    else:
-        return ord(number) - 55
-
-def any_to_dec(number, base):
-    number = str(number)[::-1]
-    sum = 0 
-    exp = 0 
-    for digit in number:
-        sum += int(val_get(digit)) * base ** exp 
-        exp += 1
-    return sum
-
-def any_to_any(number, current_base, result_base):
-    return dec_to_any(any_to_dec(number, current_base), result_base)
-
-
-
-print(dec_to_any(5162, 36))
-
-print(any_to_dec("3ZE", 36))
-
-print(any_to_any("3ZE", 36, 2))
-
-                
+krc dumaju nada zdelac tak stoby mozna byla daze mnoga vm srazu vrubac,
+eta ni slozna no ty dolzen kod narmalna prasmatrec i paniac sto k cemu,
+kagda vm akno zdelais close, no nuzna u toj vm vytascic PAGE i udalic ivo v rm.paging_table
+tak rabotait puslapiavimo, stob drugije magli zaniac ijo mesta,
+dla rm i vm dolzen byc to sam abject pamiaci, kak siciaz ja zdelal
+dla rm tak vsio risues sto jesc i dolzen abnavliatsa pastajanna bo vm budit miniac
+dla vm nada od vm.DS to vm.DS + 256
+nasciot vybrosa vm iz raboty iscio dumaju, paidzieji exception mogby kinuc kagda execute zakoncitsa
+no dla gui tak nikacit, znacit tam eta nadabudet reshac, vsprashyvaj esli cio

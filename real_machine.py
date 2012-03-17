@@ -1,3 +1,4 @@
+
 from virtual_machine import VirtualMachine
 
 
@@ -52,6 +53,11 @@ class RealMachine():
         proc = Proccess(file_name)
         page = self.fill_mem(proc)
         self.vm = VirtualMachine(proc, page, self.memory)
+
+
+    def remove_vm(self, vm_number):
+        self.paging_table - number
+
 
 from sys import argv
 rm = RealMachine()
