@@ -6,31 +6,33 @@ class RMWindow(QtGui.QMainWindow):
     def __init__(self):
         
         self.rm = RealMachine()
-        self.row = 64 
+        self.row = self.rm.MAX_VMS * 16 
         self.column = 16
-        self.vm_window = None
+        self.vmWindow = None
+        self.fileName = None
         
         super(RMWindow, self).__init__()
-        self.resize(1366,320)
+        self.setGeometry(0, 0, 1366, 320)
         self.move(self.frameGeometry().topLeft())
-        self.setWindowTitle(self.tr('Real Machine'))
+        self.setWindowTitle('Real Machine')
         self.centralWidget = QtGui.QWidget(self)
         self.centralWidget.setEnabled(True)
         self.setCentralWidget(self.centralWidget)
         #---------------------------------------------------------------------
         self.init_table(self.row)
         #---------------------------------------------------------------------
-        self.pushButton = QtGui.QPushButton(self.centralWidget)
-        self.pushButton.setGeometry(QtCore.QRect(800, 20, 97, 27))
-        self.pushButton.setText("Load")
-        self.pushButton.clicked.connect(self.run)
+        self.loadButton = QtGui.QPushButton(self.centralWidget)
+        self.loadButton.setGeometry(QtCore.QRect(800, 20, 97, 27))
+        self.loadButton.setText("Load")
+        self.loadButton.clicked.connect(self.load_btn_handler)
         
-    def run(self):
-        self.rm.start_vm('first.pr')
+    def load_btn_handler(self):
+        self.show_file_dialog()
+        self.rm.start_vm(self.fileName)
         self.fill_rm()
-        if not self.vm_window:
-            self.vm_window = VMWindow(self.rm.vm.memory)
-        self.vm_window.show()
+        if not self.vmWindow:
+            self.vmWindow = VMWindow(self.rm, self)
+        self.vmWindow.show()
          
     def fill_rm(self):
         for i in range(self.row):
@@ -40,7 +42,6 @@ class RMWindow(QtGui.QMainWindow):
                 
     def init_table(self, row):
         self.tableWidget = QtGui.QTableWidget(self.centralWidget)
-        self.tableWidget.setEnabled(True)
         self.tableWidget.setGeometry(QtCore.QRect(20, 20, 766, 297))
         self.tableWidget.setColumnCount(self.column)
         self.tableWidget.setRowCount(self.row)
@@ -51,27 +52,98 @@ class RMWindow(QtGui.QMainWindow):
             self.tableWidget.setHorizontalHeaderItem(i, item)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(45)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
+      
+        
+    def show_file_dialog(self):
+        directory = QtCore.QDir.currentPath()
+        fDialog = QtGui.QFileDialog()
+        self.fileName, _ = fDialog.getOpenFileName(self, 'Open file', directory, "*.pr")
                 
 class VMWindow(QtGui.QFrame, RMWindow):
-    def __init__(self, memory):
+    def __init__(self, rm, primary_window):
         self.row = self.column = 16
-        self.memory = memory
+        self.rm = rm
+        self.screen = QtGui.QApplication.desktop()
+        self.primary_window = primary_window
+        self.center = 0x0004 
         
         super(VMWindow, self).__init__()
-        self.resize(1366,320)
-        self.move(self.frameGeometry().bottomLeft())
-        self.setWindowTitle(self.tr('Virtual Machine'))
+        self.setGeometry(0, self.primary_window.height() + 75, 1366, 320)
+        
+        self.setWindowTitle('Virtual Machine')
         self.centralWidget = QtGui.QWidget(self)
         self.centralWidget.setEnabled(True)
+        
         self.init_table(self.row)
         
         self.fill_vm()
+        self.execCommands = QtGui.QPushButton(self.centralWidget)
+        self.execCommands.setGeometry(QtCore.QRect(800, 20, 99, 80))
+        self.execCommands.setText("Run")
+        self.execCommands.clicked.connect(self.run_btn_handler)
+        
+        self.execCommand = QtGui.QPushButton(self.centralWidget)
+        self.execCommand.setGeometry(QtCore.QRect(899, 20, 99, 80))
+        self.execCommand.setText("Run by step")
+        self.execCommand.clicked.connect(self.run_by_step_btn_handler)
+        
+        self.init_tree_widget()
+        self.fill_tree_widget()
         
     def fill_vm(self):
         for i in range(self.row):
             for j in range(self.column):
-                item = QtGui.QTableWidgetItem(str(self.memory[16 * i + j]))
+                item = QtGui.QTableWidgetItem(str(self.rm.memory[16 * i + j]))
                 self.tableWidget.setItem(i, j, item)
+                
+    def init_tree_widget(self):
+        self.treeWidget = QtGui.QTreeWidget(self.centralWidget)
+        self.treeWidget.setGeometry(QtCore.QRect(800, 110, 198, 192))
+        self.treeWidget.setFrameShape(QtGui.QFrame.WinPanel)
+        self.treeWidget.setFrameShadow(QtGui.QFrame.Plain)
+        self.treeWidget.setRootIsDecorated(False)
+        self.treeWidget.header().setDefaultSectionSize(97)
+        self.treeWidget.header().setMinimumSectionSize(20)
+        self.treeWidget.header().setStretchLastSection(False)
+        self.treeWidget.setColumnCount(2)
+        self.treeWidget.headerItem().setText(0, "REGISTER")
+        self.treeWidget.headerItem().setTextAlignment(0, self.center)
+        self.treeWidget.headerItem().setText(1, "VALUE")
+        self.treeWidget.headerItem().setTextAlignment(1, self.center)
+        for i in range(5):
+            self.item = QtGui.QTreeWidgetItem(self.treeWidget)
+            self.item.setTextAlignment(0, self.center)
+            self.item.setTextAlignment(1, self.center) 
+        self.select_cell(self.rm.vm.IP)
+            
+    def run_btn_handler(self):
+        self.rm.vm.exec_commands()
+        self.select_cell(self.rm.vm.IP)
+        self.fill_tree_widget()
+        self.fill_vm()
+        
+    def run_by_step_btn_handler(self):
+        self.rm.vm.exec_command()
+        self.select_cell(self.rm.vm.IP)
+        self.fill_tree_widget()
+        self.fill_vm()
+        
+        
+    def fill_tree_widget(self):
+        self.registers = ['DS', 'CS', 'SS', 'IP', 'SP']
+        self.reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, self.rm.vm.IP, self.rm.vm.SP]
+        for i in range(5):
+            self.treeWidget.topLevelItem(i).setText(0, self.registers[i])
+            self.treeWidget.topLevelItem(i).setText(1, str(hex(self.reg_values[i])).upper()[2:])
+            
+    def select_cell(self, IP):
+        self.IP = hex(IP)[2:]
+        row = self.IP[:1]
+        column = self.IP[-1:]
+        self.tableWidget.setCurrentCell(int(row, 16), int(column, 16))
+        
+          
+        
         
 myApp = QtGui.QApplication(sys.argv)
 gui = RMWindow()

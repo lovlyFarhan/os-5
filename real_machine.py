@@ -56,11 +56,11 @@ class RealMachine():
 
 
     def remove_vm(self, vm_number):
-        self.paging_table - number
+        self.paging_table - vm_number
 
 
-from sys import argv
-rm = RealMachine()
-rm.start_vm(argv[1])
+#from sys import argv
+#rm = RealMachine()
+#rm.start_vm(argv[1])
 #rm.start_vm(argv[2])
 #rm.start_vm(argv[3])
