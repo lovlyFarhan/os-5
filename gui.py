@@ -22,7 +22,7 @@ class RMWindow(QtGui.QMainWindow):
         self.init_table(self.row)
         #---------------------------------------------------------------------
         self.loadButton = QtGui.QPushButton(self.centralWidget)
-        self.loadButton.setGeometry(QtCore.QRect(800, 20, 97, 27))
+        self.loadButton.setGeometry(QtCore.QRect(800, 20, 500, 300))
         self.loadButton.setText("Load")
         self.loadButton.clicked.connect(self.load_btn_handler)
         
