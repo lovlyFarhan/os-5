@@ -10,12 +10,13 @@ class Proccess():
 
 class RealMachine():
     def __init__(self):
+        self.MAX_VMS = 2
         self.clear_mem()
         self.paging_table = []
 
 
     def clear_mem(self):
-        self.memory = {i : "" for i in range(1024)}
+        self.memory = {i : "" for i in range(self.MAX_VMS * 256)}
 
 
     def get_new_page(self):
@@ -51,3 +52,9 @@ class RealMachine():
         proc = Proccess(file_name)
         page = self.fill_mem(proc)
         self.vm = VirtualMachine(proc, page, self.memory)
+
+from sys import argv
+rm = RealMachine()
+rm.start_vm(argv[1])
+#rm.start_vm(argv[2])
+#rm.start_vm(argv[3])
