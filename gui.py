@@ -100,10 +100,10 @@ class VMWindow(QtGui.QFrame, RMWindow):
         
         self.output = QtGui.QLabel(self)
         self.output.setText("Output:")
-        self.output.setGeometry(QtCore.QRect(800, 215, 100, 20))
+        self.output.setGeometry(QtCore.QRect(800, 195, 100, 20))
         
         self.outputBox = QtGui.QTextEdit(self)
-        self.outputBox.setGeometry(QtCore.QRect(800, 237, 198, 80))
+        self.outputBox.setGeometry(QtCore.QRect(800, 217, 198, 100))
         self.outputBox.setReadOnly(True)
         
     def fill_vm(self):
@@ -114,13 +114,14 @@ class VMWindow(QtGui.QFrame, RMWindow):
                 
     def init_tree_widget(self):
         self.treeWidget = QtGui.QTreeWidget(self.centralWidget)
-        self.treeWidget.setGeometry(QtCore.QRect(800, 60, 198, 152))
-        self.treeWidget.setFrameShape(QtGui.QFrame.WinPanel)
-        self.treeWidget.setFrameShadow(QtGui.QFrame.Plain)
-        #self.treeWidget.setRootIsDecorated(False)
-        self.treeWidget.header().setDefaultSectionSize(97)
+        self.treeWidget.setGeometry(QtCore.QRect(800, 60, 198, 132))
+        #self.treeWidget.setFrameShape(QtGui.QFrame.WinPanel)
+        #self.treeWidget.setFrameShadow(QtGui.QFrame.Plain)
+        self.treeWidget.setRootIsDecorated(False)
+        self.treeWidget.header().setDefaultSectionSize(99)
         self.treeWidget.header().setMinimumSectionSize(20)
         self.treeWidget.header().setStretchLastSection(False)
+        self.treeWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.treeWidget.setColumnCount(2)
         self.treeWidget.headerItem().setText(0, "REGISTER")
         self.treeWidget.headerItem().setTextAlignment(0, self.center)
