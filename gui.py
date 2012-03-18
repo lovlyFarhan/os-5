@@ -114,7 +114,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
                 
     def init_tree_widget(self):
         self.treeWidget = QtGui.QTreeWidget(self.centralWidget)
-        self.treeWidget.setGeometry(QtCore.QRect(800, 60, 198, 132))
+        self.treeWidget.setGeometry(QtCore.QRect(800, 62, 198, 132))
         #self.treeWidget.setFrameShape(QtGui.QFrame.WinPanel)
         #self.treeWidget.setFrameShadow(QtGui.QFrame.Plain)
         self.treeWidget.setRootIsDecorated(False)
