@@ -60,11 +60,11 @@ class RealMachine():
 
 
 
-from sys import argv
-rm = RealMachine()
-try:
-    rm.start_vm(argv[1])
-except Exception as e:
-    print(e)
+#from sys import argv
+#rm = RealMachine()
+#try:
+#    rm.start_vm(argv[1])
+#except Exception as e:
+#    print(e)
 #rm.start_vm(argv[2])
 #rm.start_vm(argv[3])
