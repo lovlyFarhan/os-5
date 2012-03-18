@@ -8,8 +8,7 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.memory = rm_memory #{i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
-        #self.exec_commands()
-
+        self.DR = ''
 
     def exec_commands(self):
         while(self.exec_command() != True):
@@ -17,39 +16,39 @@ class VirtualMachine():
 
 
     def exec_command(self):
-        DR = self.memory[self.IP]
+        self.DR = self.memory[self.IP]
         self.IP += 1
-        if (DR[:2] == 'DS'):
+        if (self.DR[:2] == 'DS'):
             self.SP += 1
-            self.memory[self.SP] = self.memory[self.DS + int(DR[2:])]
-        elif (DR[:2] == 'SD'):
-            self.memory[self.DS + int(DR[2:])] = self.memory[self.SP] 
+            self.memory[self.SP] = self.memory[self.DS + int(self.DR[2:])]
+        elif (self.DR[:2] == 'SD'):
+            self.memory[self.DS + int(self.DR[2:])] = self.memory[self.SP] 
             self.SP -= 1
-        elif (DR == 'ADD'):
+        elif (self.DR == 'ADD'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) + int(self.memory[self.SP])
             self.SP -= 1
-        elif (DR == 'SUB'):
+        elif (self.DR == 'SUB'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) - int(self.memory[self.SP])
             self.SP -= 1
-        elif (DR == 'MUL'):
+        elif (self.DR == 'MUL'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) * int(self.memory[self.SP])
             self.SP -= 1
-        elif (DR == 'DIV'):
+        elif (self.DR == 'DIV'):
             self.memory[self.SP - 1] = int(int(self.memory[self.SP - 1]) / int(self.memory[self.SP]))
             self.SP -= 1
-        elif(DR == 'ECHO'):
+        elif(self.DR == 'ECHO'):
             print(self.memory[self.SP], end="")
             self.SP -= 1 
-        elif(DR == 'AND'):
+        elif(self.DR == 'AND'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) & int(self.memory[self.SP])
             self.SP -= 1
-        elif(DR == 'OR'):
+        elif(self.DR == 'OR'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) | int(self.memory[self.SP])
             self.SP -= 1
-        elif(DR == 'READ'):
+        elif(self.DR == 'READ'):
             self.SP += 1
             self.memory[self.SP] = input()[:4]
-        elif(DR == 'CMP'):
+        elif(self.DR == 'CMP'):
             if (int(self.memory[self.SP - 1]) == int(self.memory[self.SP])):
                 self.memory[self.SP - 1] = 1
             elif (int(self.memory[self.SP - 1]) > int(self.memory[self.SP])):
@@ -57,28 +56,28 @@ class VirtualMachine():
             else:
                 self.memory[self.SP - 1] = 2
             self.SP -= 1
-        elif(DR == 'NEG'):
+        elif(self.DR == 'NEG'):
             self.memory[self.SP] = int(-self.memory[self.SP])
-        elif(DR == 'NOT'):
+        elif(self.DR == 'NOT'):
             if(int(self.memory[self.SP]) == 0):
                 self.memory[self.SP] = 1
             else:
                 self.memory[self.SP] = 0
-        elif(DR[:2] == 'JP'):
-            self.IP = self.CS + int(DR[2:])
-        elif(DR[:2] == 'JE'):
+        elif(self.DR[:2] == 'JP'):
+            self.IP = self.CS + int(self.DR[2:])
+        elif(self.DR[:2] == 'JE'):
             if(self.memory[self.SP] == 1):
-                self.IP = self.CS + int(DR[2:])
+                self.IP = self.CS + int(self.DR[2:])
             self.SP -= 1
-        elif(DR[:2] == 'JL'):
+        elif(self.DR[:2] == 'JL'):
             if(self.memory[self.SP] == 0):
-                self.IP = self.CS + int(DR[2:])
+                self.IP = self.CS + int(self.DR[2:])
             self.SP -= 1
-        elif(DR[:2] == 'JG'):
+        elif(self.DR[:2] == 'JG'):
             if(self.memory[self.SP] == 2):
-                self.IP = self.CS + int(DR[2:])
+                self.IP = self.CS + int(self.DR[2:])
             self.SP -= 1
-        elif(DR == "HALT"):
+        elif(self.DR == "HALT"):
             return True
         return False
 

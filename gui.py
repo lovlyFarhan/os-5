@@ -52,6 +52,7 @@ class RMWindow(QtGui.QMainWindow):
             self.tableWidget.setHorizontalHeaderItem(i, item)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(45)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
+        #self.tableWidget.horizontalHeader().setStretchLastSection(False)
       
         
     def show_file_dialog(self):
@@ -66,6 +67,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.screen = QtGui.QApplication.desktop()
         self.primary_window = primary_window
         self.center = 0x0004 
+        
         
         super(VMWindow, self).__init__()
         self.setGeometry(0, self.primary_window.height() + 75, 1366, 320)
@@ -90,6 +92,13 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.init_tree_widget()
         self.fill_tree_widget()
         
+        
+        self.input = QtGui.QLineEdit(self)
+        self.input.move(1050, 20)
+        self.input.setPlaceholderText('input')
+        
+        
+        
     def fill_vm(self):
         for i in range(self.row):
             for j in range(self.column):
@@ -101,7 +110,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.treeWidget.setGeometry(QtCore.QRect(800, 110, 198, 192))
         self.treeWidget.setFrameShape(QtGui.QFrame.WinPanel)
         self.treeWidget.setFrameShadow(QtGui.QFrame.Plain)
-        self.treeWidget.setRootIsDecorated(False)
+        #self.treeWidget.setRootIsDecorated(False)
         self.treeWidget.header().setDefaultSectionSize(97)
         self.treeWidget.header().setMinimumSectionSize(20)
         self.treeWidget.header().setStretchLastSection(False)
@@ -110,7 +119,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.treeWidget.headerItem().setTextAlignment(0, self.center)
         self.treeWidget.headerItem().setText(1, "VALUE")
         self.treeWidget.headerItem().setTextAlignment(1, self.center)
-        for i in range(5):
+        for i in range(6):
             self.item = QtGui.QTreeWidgetItem(self.treeWidget)
             self.item.setTextAlignment(0, self.center)
             self.item.setTextAlignment(1, self.center) 
@@ -130,11 +139,16 @@ class VMWindow(QtGui.QFrame, RMWindow):
         
         
     def fill_tree_widget(self):
-        self.registers = ['DS', 'CS', 'SS', 'IP', 'SP']
-        self.reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, self.rm.vm.IP, self.rm.vm.SP]
-        for i in range(5):
+        self.registers = ['DS', 'CS', 'SS', 'IP', 'SP', 'DR']
+        self.reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, self.rm.vm.IP, self.rm.vm.SP, self.rm.vm.DR]
+        for i in range(6):
             self.treeWidget.topLevelItem(i).setText(0, self.registers[i])
-            self.treeWidget.topLevelItem(i).setText(1, str(hex(self.reg_values[i])).upper()[2:])
+            if type(self.reg_values[i]) is str:
+                self.treeWidget.topLevelItem(i).setText(1, self.reg_values[i])
+            else:
+                self.treeWidget.topLevelItem(i).setText(1, str(hex(self.reg_values[i])).upper()[2:])
+        #self.treeWidget.topLevelItem(5).setText(0, self.registers[5])
+        
             
     def select_cell(self, IP):
         self.IP = hex(IP)[2:]
