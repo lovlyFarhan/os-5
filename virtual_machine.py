@@ -1,3 +1,4 @@
+from PySide import QtGui
 
 class VirtualMachine():
     def __init__(self, proc, page, rm_memory):
@@ -8,47 +9,45 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.memory = rm_memory #{i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
-        self.DR = ''
 
-    def exec_commands(self):
-        while(self.exec_command() != True):
+    def exec_commands(self, output, vm_gui):
+        while(self.exec_command(output, vm_gui) != True):
             pass
 
 
-    def exec_command(self):
-        self.DR = self.memory[self.IP]
+    def exec_command(self, output, vm_gui):
+        DR = self.memory[self.IP]
         self.IP += 1
-        if (self.DR[:2] == 'DS'):
+        if (DR[:2] == 'DS'):
             self.SP += 1
-            self.memory[self.SP] = self.memory[self.DS + int(self.DR[2:])]
-        elif (self.DR[:2] == 'SD'):
-            self.memory[self.DS + int(self.DR[2:])] = self.memory[self.SP] 
+            self.memory[self.SP] = self.memory[self.DS + int(DR[2:])]
+        elif (DR[:2] == 'SD'):
+            self.memory[self.DS + int(DR[2:])] = self.memory[self.SP] 
             self.SP -= 1
-        elif (self.DR == 'ADD'):
+        elif (DR == 'ADD'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) + int(self.memory[self.SP])
             self.SP -= 1
-        elif (self.DR == 'SUB'):
+        elif (DR == 'SUB'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) - int(self.memory[self.SP])
             self.SP -= 1
-        elif (self.DR == 'MUL'):
+        elif (DR == 'MUL'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) * int(self.memory[self.SP])
             self.SP -= 1
-        elif (self.DR == 'DIV'):
+        elif (DR == 'DIV'):
             self.memory[self.SP - 1] = int(int(self.memory[self.SP - 1]) / int(self.memory[self.SP]))
             self.SP -= 1
-        elif(self.DR == 'ECHO'):
-            print(self.memory[self.SP], end="")
+        elif(DR == 'ECHO'):
+            output.insertPlainText(str(self.memory[self.SP]))
             self.SP -= 1 
-        elif(self.DR == 'AND'):
+        elif(DR == 'AND'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) & int(self.memory[self.SP])
             self.SP -= 1
-        elif(self.DR == 'OR'):
+        elif(DR == 'OR'):
             self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) | int(self.memory[self.SP])
             self.SP -= 1
-        elif(self.DR == 'READ'):
-            self.SP += 1
-            self.memory[self.SP] = input()[:4]
-        elif(self.DR == 'CMP'):
+        elif(DR == 'READ'):
+            vm_gui.read_msg_box()
+        elif(DR == 'CMP'):
             if (int(self.memory[self.SP - 1]) == int(self.memory[self.SP])):
                 self.memory[self.SP - 1] = 1
             elif (int(self.memory[self.SP - 1]) > int(self.memory[self.SP])):
@@ -56,31 +55,27 @@ class VirtualMachine():
             else:
                 self.memory[self.SP - 1] = 2
             self.SP -= 1
-        elif(self.DR == 'NEG'):
+        elif(DR == 'NEG'):
             self.memory[self.SP] = int(-self.memory[self.SP])
-        elif(self.DR == 'NOT'):
+        elif(DR == 'NOT'):
             if(int(self.memory[self.SP]) == 0):
                 self.memory[self.SP] = 1
             else:
                 self.memory[self.SP] = 0
-        elif(self.DR[:2] == 'JP'):
-            self.IP = self.CS + int(self.DR[2:])
-        elif(self.DR[:2] == 'JE'):
+        elif(DR[:2] == 'JP'):
+            self.IP = self.CS + int(DR[2:])
+        elif(DR[:2] == 'JE'):
             if(self.memory[self.SP] == 1):
-                self.IP = self.CS + int(self.DR[2:])
+                self.IP = self.CS + int(DR[2:])
             self.SP -= 1
-        elif(self.DR[:2] == 'JL'):
+        elif(DR[:2] == 'JL'):
             if(self.memory[self.SP] == 0):
-                self.IP = self.CS + int(self.DR[2:])
+                self.IP = self.CS + int(DR[2:])
             self.SP -= 1
-        elif(self.DR[:2] == 'JG'):
+        elif(DR[:2] == 'JG'):
             if(self.memory[self.SP] == 2):
-                self.IP = self.CS + int(self.DR[2:])
+                self.IP = self.CS + int(DR[2:])
             self.SP -= 1
-        elif(self.DR == "HALT"):
+        elif(DR == "HALT"):
             return True
         return False
-
-
-            
-                          
