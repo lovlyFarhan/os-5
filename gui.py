@@ -14,7 +14,7 @@ class RMWindow(QtGui.QMainWindow):
         
         
         
-        self.setGeometry(0, 0, 1000, 200)
+        self.setGeometry(0, 0, 1020, 340)
         self.move(self.frameGeometry().topLeft())
         self.setWindowTitle('Real Machine')
         self.centralWidget = QtGui.QWidget(self)
@@ -27,7 +27,7 @@ class RMWindow(QtGui.QMainWindow):
         self.init_table(self.row)
         #---------------------------------------------------------------------
         self.loadButton = QtGui.QPushButton(self.centralWidget)
-        self.loadButton.setGeometry(QtCore.QRect(800, 0, 150, 200))
+        self.loadButton.setGeometry(QtCore.QRect(800, 20, 200, 297))
         self.loadButton.setText("Load")
         self.loadButton.clicked.connect(self.load_btn_handler)
         
@@ -76,7 +76,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.primary_window = primary_window
         self.center = 0x0004 
         
-        self.setGeometry(0, self.primary_window.height()+80, 1020, 340)
+        self.setGeometry(0, self.primary_window.height()+200, 1020, 340)
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
         self.setWindowTitle('Virtual Machine')
         self.centralWidget = QtGui.QWidget(self)
