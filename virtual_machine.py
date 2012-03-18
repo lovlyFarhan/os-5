@@ -9,6 +9,8 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.memory = rm_memory #{i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
+        self.exec_commands()
+
 
     def exec_commands(self, output, vm_gui):
         while(self.exec_command(output, vm_gui) != True):
@@ -35,6 +37,11 @@ class VirtualMachine():
             self.SP -= 1
         elif (DR == 'DIV'):
             self.memory[self.SP - 1] = int(int(self.memory[self.SP - 1]) / int(self.memory[self.SP]))
+        elif (self.DR == 'DIV'):
+            try:
+                self.memory[self.SP - 1] = int(int(self.memory[self.SP - 1]) / int(self.memory[self.SP]))
+            except ZeroDivisionError as zde:
+                raise Exception("Division by zero")
             self.SP -= 1
         elif(DR == 'ECHO'):
             output.insertPlainText(str(self.memory[self.SP]))

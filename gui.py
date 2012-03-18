@@ -12,8 +12,6 @@ class RMWindow(QtGui.QMainWindow):
         self.vmWindow = None
         self.fileName = None
         
-        
-        
         self.setGeometry(0, 0, 1020, 340)
         self.move(self.frameGeometry().topLeft())
         self.setWindowTitle('Real Machine')
