@@ -11,6 +11,7 @@ class RMWindow(QtGui.QMainWindow):
         self.column = 16
         self.vmWindow = None
         self.fileName = None
+        #self.window_list = []
         
         self.setGeometry(0, 0, 1020, 340)
         self.move(self.frameGeometry().topLeft())
@@ -34,10 +35,12 @@ class RMWindow(QtGui.QMainWindow):
         if os.path.exists(self.fileName):
             self.rm.start_vm(self.fileName)
             self.fill_rm()
-            if not self.vmWindow:
-                self.vmWindow = VMWindow(self.rm, self)
+            #if not self.vmWindow:
+            self.vmWindow = VMWindow(self)
+            self.connect(self.vmWindow, QtCore.SIGNAL("vm_win_close( QWidget * )"), self.vm_close_sig_handler)
             self.vmWindow.show()
-         
+            #self.window_list.append(self.vmWindow)
+    
     def fill_rm(self):
         for i in range(self.row):
             for j in range(self.column):
@@ -58,24 +61,25 @@ class RMWindow(QtGui.QMainWindow):
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
         #self.tableWidget.horizontalHeader().setStretchLastSection(False)
       
-        
     def show_file_dialog(self):
         directory = QtCore.QDir.currentPath()
         fDialog = QtGui.QFileDialog()
         self.fileName, _ = fDialog.getOpenFileName(self, 'Open file', directory, "*.pr")
+    def vm_close_sig_handler(self):
+        self.rm.remove_vm()
                 
 class VMWindow(QtGui.QFrame, RMWindow):
-    def __init__(self, rm, primary_window):
-        super(VMWindow, self).__init__()
+    def __init__(self, parent = None):
+        super(VMWindow, self).__init__(parent)
         
         self.row = self.column = 16
-        self.rm = rm
+        self.rm = parent.rm
         self.screen = QtGui.QApplication.desktop()
-        self.primary_window = primary_window
-        self.center = 0x0004 
+        self.parent = parent
+        self.center = 0x0004
         
-        self.setGeometry(0, self.primary_window.height()+200, 1020, 340)
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
+        self.setGeometry(0, self.parent.height()+200, 1020, 340)
+        self.setWindowFlags(QtCore.Qt.Window)
         self.setWindowTitle('Virtual Machine')
         self.centralWidget = QtGui.QWidget(self)
         self.centralWidget.setEnabled(True)
@@ -83,6 +87,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.init_table(self.row)
         
         self.fill_vm()
+        
         self.execCommands = QtGui.QPushButton(self.centralWidget)
         self.execCommands.setGeometry(QtCore.QRect(800, 20, 99, 40))
         self.execCommands.setText("Run")
@@ -107,7 +112,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
     def fill_vm(self):
         for i in range(self.row):
             for j in range(self.column):
-                item = QtGui.QTableWidgetItem(str(self.rm.memory[16 * i + j]))
+                item = QtGui.QTableWidgetItem(str(self.rm.memory[16 * i + j + self.rm.vm.PAGE]))
                 self.tableWidget.setItem(i, j, item)
                 
     def init_tree_widget(self):
@@ -136,12 +141,14 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.select_cell(self.rm.vm.IP)
         self.fill_tree_widget()
         self.fill_vm()
+        self.parent.fill_rm()
         
     def run_by_step_btn_handler(self):
         self.rm.vm.exec_command(self.outputBox, self)
         self.select_cell(self.rm.vm.IP)
         self.fill_tree_widget()
         self.fill_vm()
+        self.parent.fill_rm()
         
     def fill_tree_widget(self):
         self.registers = ['DS', 'CS', 'SS', 'IP', 'SP']
@@ -161,6 +168,12 @@ class VMWindow(QtGui.QFrame, RMWindow):
         if ok:
             self.rm.vm.SP += 1
             self.rm.vm.memory[self.rm.vm.SP] = text
+            
+    def closeEvent(self, evt):
+        self.emit(QtCore.SIGNAL("vm_win_close( QWidget * )"), self)
+        return super(VMWindow, self).closeEvent(evt)
+        
+        
         
 myApp = QtGui.QApplication(sys.argv)
 gui = RMWindow()

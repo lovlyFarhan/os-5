@@ -1,4 +1,3 @@
-from PySide import QtGui
 
 class VirtualMachine():
     def __init__(self, proc, page, rm_memory):
@@ -9,7 +8,6 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.memory = rm_memory #{i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
-        #self.exec_commands()
         self.DR = ''
 
 

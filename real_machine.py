@@ -8,7 +8,6 @@ class Proccess():
         self.commands = [line.rstrip('\n').replace('\\n', '\n')
                 for line in file if line[0] != '#']
 
-
 class RealMachine():
     def __init__(self):
         self.MAX_VMS = 2
@@ -55,8 +54,8 @@ class RealMachine():
         self.vm = VirtualMachine(proc, page, self.memory)
 
 
-    def remove_vm(self, vm_number):
-        self.paging_table - vm_number
+    def remove_vm(self):
+        self.paging_table.pop()
 
 
 
