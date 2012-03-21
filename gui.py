@@ -165,6 +165,8 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.fill_tree_widget()
         self.fill_vm()
         self.parent.fill_rm()
+        self.execCommands.setEnabled(False)
+        self.execCommand.setEnabled(False)
         
     def run_by_step_btn_handler(self):
         self.rm.vm.exec_command(self.outputBox, self)
@@ -172,6 +174,9 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.fill_tree_widget()
         self.fill_vm()
         self.parent.fill_rm()
+        if(self.rm.vm.memory[self.rm.vm.IP] == "HALT"):
+            self.execCommands.setEnabled(False)
+            self.execCommand.setEnabled(False)
         
     def fill_tree_widget(self):
         registers = ['DS', 'CS', 'SS', 'IP', 'SP']
@@ -193,7 +198,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.tableWidget.setCurrentCell(int(row, 16), int(column, 16))
     
     def read_msg_box(self):
-        text, ok = QtGui.QInputDialog.getText(self, "Read", "Enter number or string:", QtGui.QLineEdit.Normal)
+        text, ok = QtGui.QInputDialog.getText(self, "Read", "Enter value:", QtGui.QLineEdit.Normal)
         if ok:
             self.rm.vm.SP += 1
             self.rm.vm.memory[self.rm.vm.SP] = text
@@ -202,8 +207,10 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.emit(QtCore.SIGNAL("vm_win_close( QWidget * )"), self)
         return super(VMWindow, self).closeEvent(evt)
         
-        
-        
+    def msg_box_exception(self, exception):
+        msg_box = QtGui.QMessageBox.critical(self, "Error", exception, QtGui.QMessageBox.Warning)
+        del self.parent.vmWindow
+
 myApp = QtGui.QApplication(sys.argv)
 gui = RMWindow()
 gui.show()

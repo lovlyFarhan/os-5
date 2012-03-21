@@ -10,7 +10,7 @@ class Proccess():
 
 class RealMachine():
     def __init__(self):
-        self.MAX_VMS = 4
+        self.MAX_VMS = 1
         self.PPTR = self.MAX_VMS * 256
         self.clear_mem()
 
@@ -30,7 +30,7 @@ class RealMachine():
                 empty_pos = self.PPTR + i 
             elif(page != ""):
                 paging_table.append(int(page))
-        print(paging_table) 
+        
         if(paging_table == []):
             self.memory[empty_pos] = "0"
             return 0
