@@ -11,23 +11,33 @@ class Proccess():
 class RealMachine():
     def __init__(self):
         self.MAX_VMS = 4
-        self.clear_mem()
-        self.paging_table = []
         self.PPTR = self.MAX_VMS * 256
+        self.clear_mem()
 
 
     def clear_mem(self):
         self.memory = {i : "" for i in range(self.MAX_VMS * 256)}
+        for i in range(16):
+            self.memory[self.PPTR + i] = ""
 
 
     def get_new_page(self):
-        if(self.paging_table == []):
-            self.paging_table.append(0)
+        empty_pos = -1
+        paging_table = []
+        for i in range(self.MAX_VMS):
+            page = self.memory[self.PPTR + i]
+            if(page == "" and empty_pos == -1):
+                empty_pos = self.PPTR + i 
+            elif(page != ""):
+                paging_table.append(int(page))
+        print(paging_table) 
+        if(paging_table == []):
+            self.memory[empty_pos] = "0"
             return 0
         else:
-            for i in range(max(self.paging_table) + 2):
-                if i not in self.paging_table:
-                    self.paging_table.append(i)
+            for i in range(max(paging_table) + 2):
+                if i not in paging_table:
+                    self.memory[empty_pos] = str(i)
                     return i
 
 
@@ -55,8 +65,11 @@ class RealMachine():
         self.vm = VirtualMachine(proc, page, self.memory)
 
 
-    def remove_vm(self):
-        self.paging_table.pop()
+    def remove_vm(self, page):
+        for i in range(self.MAX_VMS):
+            if(self.memory[self.PPTR + i] == str(page)):
+                self.memory[self.PPTR + i] = ""
+                return
 
 
 

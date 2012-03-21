@@ -7,7 +7,7 @@ class RMWindow(QtGui.QMainWindow):
         super(RMWindow, self).__init__()
         
         self.rm = RealMachine()
-        self.row = self.rm.MAX_VMS * 16 
+        self.row = self.rm.MAX_VMS * 16 + 1 
         self.column = 16
         self.vmWindow = None
         self.fileName = None
@@ -30,7 +30,10 @@ class RMWindow(QtGui.QMainWindow):
         self.init_load_btn()
         self.init_reset_btn()
         #---------------------------------------------------------------------
-        
+        self.pPtrLabel = QtGui.QLabel(self)
+        self.pPtrLabel.setGeometry(QtCore.QRect(20, 320, 100, 20))
+        self.pPtrLabel.setText("PPTR = " + str(hex(self.rm.PPTR)[2:].upper()))
+
     def load_btn_handler(self):
         self.show_file_dialog()
         if os.path.exists(self.fileName):
@@ -41,6 +44,8 @@ class RMWindow(QtGui.QMainWindow):
             self.connect(self.vmWindow, QtCore.SIGNAL("vm_win_close( QWidget * )"), self.vm_close_sig_handler)
             self.vmWindow.show()
             #self.window_list.append(self.vmWindow)
+            if int(self.rm.vm.PAGE / 256 + 1) >= self.rm.MAX_VMS:
+                self.loadButton.setEnabled(False)
     
     def reset_btn_handler(self):
         self.rm.clear_mem()
@@ -64,15 +69,16 @@ class RMWindow(QtGui.QMainWindow):
             self.tableWidget.setHorizontalHeaderItem(i, item)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(45)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
-      
     def show_file_dialog(self):
         directory = QtCore.QDir.currentPath()
         fDialog = QtGui.QFileDialog()
         self.fileName, _ = fDialog.getOpenFileName(self, 'Open file', directory, "*.pr")
         
     def vm_close_sig_handler(self):
-        self.rm.remove_vm()
-        
+        self.rm.remove_vm(int(self.rm.vm.PAGE / 256))
+        self.fill_rm()
+        self.loadButton.setEnabled(True)
+
     def init_load_btn(self):
         self.loadButton = QtGui.QPushButton(self.centralWidget)
         self.loadButton.setGeometry(QtCore.QRect(800, 20, 50, 25))
@@ -147,7 +153,7 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.treeWidget.headerItem().setTextAlignment(0, self.center)
         self.treeWidget.headerItem().setText(1, "VALUE")
         self.treeWidget.headerItem().setTextAlignment(1, self.center)
-        for i in range(5):
+        for i in range(6):
             self.item = QtGui.QTreeWidgetItem(self.treeWidget)
             self.item.setTextAlignment(0, self.center)
             self.item.setTextAlignment(1, self.center) 
@@ -168,9 +174,10 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.parent.fill_rm()
         
     def fill_tree_widget(self):
-        self.registers = ['DS', 'CS', 'SS', 'IP', 'SP']
-        self.reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, self.rm.vm.IP, self.rm.vm.SP]
-        for i in range(5):
+        self.registers = ['DS', 'CS', 'SS', 'IP', 'SP', 'PAGE']
+        self.reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, 
+                self.rm.vm.IP, self.rm.vm.SP, int(self.rm.vm.PAGE / 256)]
+        for i in range(6):
             self.treeWidget.topLevelItem(i).setText(0, self.registers[i])
             self.treeWidget.topLevelItem(i).setText(1, str(hex(self.reg_values[i])).upper()[2:])
             
