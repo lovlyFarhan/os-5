@@ -174,17 +174,22 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.parent.fill_rm()
         
     def fill_tree_widget(self):
-        self.registers = ['DS', 'CS', 'SS', 'IP', 'SP', 'PAGE']
-        self.reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, 
-                self.rm.vm.IP, self.rm.vm.SP, int(self.rm.vm.PAGE / 256)]
-        for i in range(6):
-            self.treeWidget.topLevelItem(i).setText(0, self.registers[i])
-            self.treeWidget.topLevelItem(i).setText(1, str(hex(self.reg_values[i])).upper()[2:])
-            
+        registers = ['DS', 'CS', 'SS', 'IP', 'SP']
+        reg_values = [self.rm.vm.DS, self.rm.vm.CS, self.rm.vm.SS, 
+                self.rm.vm.IP, self.rm.vm.SP]
+        for i in range(5):
+            self.treeWidget.topLevelItem(i).setText(0, registers[i])
+            self.treeWidget.topLevelItem(i).setText(1, 
+                    str(hex(reg_values[i] - self.rm.vm.PAGE)).upper()[2:])
+        
+
+        self.treeWidget.topLevelItem(5).setText(0, 'PAGE')
+        self.treeWidget.topLevelItem(5).setText(1, str(hex(int(self.rm.vm.PAGE /256))[2:])) 
+
     def select_cell(self, IP):
-        self.IP = hex(IP)[2:]
-        row = self.IP[:1]
-        column = self.IP[-1:]
+        IP = hex(IP - self.rm.vm.PAGE)[2:]
+        row = IP[:1]
+        column = IP[-1:]
         self.tableWidget.setCurrentCell(int(row, 16), int(column, 16))
     
     def read_msg_box(self):
