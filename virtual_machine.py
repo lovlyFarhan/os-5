@@ -8,7 +8,6 @@ class VirtualMachine():
         self.IP = self.CS
         self.SP = self.SS
         self.memory = rm_memory #{i:rm_memory[i] for i in range(self.DS, self.DS + 256)}
-        #self.DR = ''
 
 
     def exec_commands(self, output, vm_gui):

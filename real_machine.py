@@ -10,9 +10,10 @@ class Proccess():
 
 class RealMachine():
     def __init__(self):
-        self.MAX_VMS = 2
+        self.MAX_VMS = 4
         self.clear_mem()
         self.paging_table = []
+        self.PPTR = self.MAX_VMS * 256
 
 
     def clear_mem(self):
