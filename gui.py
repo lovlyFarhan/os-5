@@ -11,7 +11,6 @@ class RMWindow(QtGui.QMainWindow):
         self.column = 16
         self.vmWindow = None
         self.fileName = None
-        #self.window_list = []
         
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Windows'))
         QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
@@ -23,13 +22,15 @@ class RMWindow(QtGui.QMainWindow):
         self.centralWidget.setEnabled(True)
         self.setCentralWidget(self.centralWidget)
         
-        #self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
-        
         #---------------------------------------------------------------------
         self.init_table(self.row)
         self.init_load_btn()
         self.init_reset_btn()
+        self.init_pPtr_label()
         #---------------------------------------------------------------------
+        
+        
+    def init_pPtr_label(self):
         self.pPtrLabel = QtGui.QLabel(self)
         self.pPtrLabel.setGeometry(QtCore.QRect(20, 320, 100, 20))
         self.pPtrLabel.setText("PPTR = " + str(hex(self.rm.PPTR)[2:].upper()))
@@ -39,11 +40,9 @@ class RMWindow(QtGui.QMainWindow):
         if os.path.exists(self.fileName):
             self.rm.start_vm(self.fileName)
             self.fill_rm()
-            #if not self.vmWindow:
             self.vmWindow = VMWindow(self)
             self.connect(self.vmWindow, QtCore.SIGNAL("vm_win_close( QWidget * )"), self.vm_close_sig_handler)
             self.vmWindow.show()
-            #self.window_list.append(self.vmWindow)
             if int(self.rm.vm.PAGE / 256 + 1) >= self.rm.MAX_VMS:
                 self.loadButton.setEnabled(False)
     
@@ -59,16 +58,18 @@ class RMWindow(QtGui.QMainWindow):
                 
     def init_table(self, row):
         self.tableWidget = QtGui.QTableWidget(self.centralWidget)
-        self.tableWidget.setGeometry(QtCore.QRect(20, 20, 766, 297))
+        self.tableWidget.setGeometry(QtCore.QRect(20, 20, 768, 297))
         self.tableWidget.setColumnCount(self.column)
         self.tableWidget.setRowCount(self.row)
         self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        list = []
         for i in range(row):
-            item = QtGui.QTableWidgetItem(hex(i).upper()[2:])
-            self.tableWidget.setVerticalHeaderItem(i, item)
-            self.tableWidget.setHorizontalHeaderItem(i, item)
+            list.append(str(hex(i)[2:]).upper())
+        self.tableWidget.setHorizontalHeaderLabels(list)
+        self.tableWidget.setVerticalHeaderLabels(list)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(45)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
+        
     def show_file_dialog(self):
         directory = QtCore.QDir.currentPath()
         fDialog = QtGui.QFileDialog()
@@ -108,26 +109,33 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.centralWidget.setEnabled(True)
         
         self.init_table(self.row)
-        
+        self.init_run_btn()
+        self.init_run_step_btn()
         self.fill_vm()
-        
-        self.execCommands = QtGui.QPushButton(self.centralWidget)
-        self.execCommands.setGeometry(QtCore.QRect(800, 20, 99, 40))
-        self.execCommands.setText("Run")
-        self.execCommands.clicked.connect(self.run_btn_handler)
-        
-        self.execCommand = QtGui.QPushButton(self.centralWidget)
-        self.execCommand.setGeometry(QtCore.QRect(900, 20, 99, 40))
-        self.execCommand.setText("Run by step")
-        self.execCommand.clicked.connect(self.run_by_step_btn_handler)
-        
         self.init_tree_widget()
         self.fill_tree_widget()
+        self.init_output_label()
+        self.init_outbut_box()
         
+        
+    def init_run_btn(self):
+        self.runBtn = QtGui.QPushButton(self.centralWidget)
+        self.runBtn.setGeometry(QtCore.QRect(800, 20, 99, 40))
+        self.runBtn.setText("Run")
+        self.runBtn.clicked.connect(self.run_btn_handler)
+        
+    def init_run_step_btn(self):
+        self.runByStepBtn = QtGui.QPushButton(self.centralWidget)
+        self.runByStepBtn.setGeometry(QtCore.QRect(900, 20, 99, 40))
+        self.runByStepBtn.setText("Run by step")
+        self.runByStepBtn.clicked.connect(self.run_by_step_btn_handler)
+        
+    def init_output_label(self):  
         self.output = QtGui.QLabel(self)
         self.output.setText("Output:")
         self.output.setGeometry(QtCore.QRect(800, 195, 100, 20))
         
+    def init_outbut_box(self):
         self.outputBox = QtGui.QTextEdit(self)
         self.outputBox.setGeometry(QtCore.QRect(800, 217, 198, 100))
         self.outputBox.setReadOnly(True)
@@ -141,8 +149,6 @@ class VMWindow(QtGui.QFrame, RMWindow):
     def init_tree_widget(self):
         self.treeWidget = QtGui.QTreeWidget(self.centralWidget)
         self.treeWidget.setGeometry(QtCore.QRect(800, 62, 198, 132))
-        #self.treeWidget.setFrameShape(QtGui.QFrame.WinPanel)
-        #self.treeWidget.setFrameShadow(QtGui.QFrame.Plain)
         self.treeWidget.setRootIsDecorated(False)
         self.treeWidget.header().setDefaultSectionSize(99)
         self.treeWidget.header().setMinimumSectionSize(20)
@@ -160,23 +166,23 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.select_cell(self.rm.vm.IP)
             
     def run_btn_handler(self):
-        self.rm.vm.exec_commands(self.outputBox, self)
+        self.rm.vm.exec_commands(self)
         self.select_cell(self.rm.vm.IP)
         self.fill_tree_widget()
         self.fill_vm()
         self.parent.fill_rm()
-        self.execCommands.setEnabled(False)
-        self.execCommand.setEnabled(False)
+        self.runBtn.setEnabled(False)
+        self.runByStepBtn.setEnabled(False)
         
     def run_by_step_btn_handler(self):
-        self.rm.vm.exec_command(self.outputBox, self)
+        self.rm.vm.exec_command(self)
         self.select_cell(self.rm.vm.IP)
         self.fill_tree_widget()
         self.fill_vm()
         self.parent.fill_rm()
         if(self.rm.vm.memory[self.rm.vm.IP] == "HALT"):
-            self.execCommands.setEnabled(False)
-            self.execCommand.setEnabled(False)
+            self.runBtn.setEnabled(False)
+            self.runByStepBtn.setEnabled(False)
         
     def fill_tree_widget(self):
         registers = ['DS', 'CS', 'SS', 'IP', 'SP']
@@ -187,7 +193,6 @@ class VMWindow(QtGui.QFrame, RMWindow):
             self.treeWidget.topLevelItem(i).setText(1, 
                     str(hex(reg_values[i] - self.rm.vm.PAGE)).upper()[2:])
         
-
         self.treeWidget.topLevelItem(5).setText(0, 'PAGE')
         self.treeWidget.topLevelItem(5).setText(1, str(hex(int(self.rm.vm.PAGE /256))[2:])) 
 
@@ -198,7 +203,8 @@ class VMWindow(QtGui.QFrame, RMWindow):
         self.tableWidget.setCurrentCell(int(row, 16), int(column, 16))
     
     def read_msg_box(self):
-        text, ok = QtGui.QInputDialog.getText(self, "Read", "Enter value:", QtGui.QLineEdit.Normal)
+        text, ok = QtGui.QInputDialog.getText(self, "Read", "Enter value:",
+                   QtGui.QLineEdit.Normal)
         if ok:
             self.rm.vm.SP += 1
             self.rm.vm.memory[self.rm.vm.SP] = text
@@ -208,8 +214,11 @@ class VMWindow(QtGui.QFrame, RMWindow):
         return super(VMWindow, self).closeEvent(evt)
         
     def msg_box_exception(self, exception):
-        msg_box = QtGui.QMessageBox.critical(self, "Error", exception, QtGui.QMessageBox.Warning)
+        QtGui.QMessageBox.critical(self, "Error", exception, QtGui.QMessageBox.Warning)
+        self.parent.vmWindow.close()
         del self.parent.vmWindow
+
+
 
 myApp = QtGui.QApplication(sys.argv)
 gui = RMWindow()

@@ -10,12 +10,12 @@ class VirtualMachine():
         self.memory = rm_memory
 
 
-    def exec_commands(self, output, vm_gui):
-        while(self.exec_command(output, vm_gui) != True):
+    def exec_commands(self, vm_gui):
+        while(self.exec_command(vm_gui) != True):
             pass
 
 
-    def exec_command(self, output, vm_gui):
+    def exec_command(self, vm_gui):
         DR = str(self.memory[self.IP])
         self.IP += 1
         try:
@@ -40,7 +40,7 @@ class VirtualMachine():
                 self.memory[self.SP - 1] = int(int(self.memory[self.SP - 1]) / int(self.memory[self.SP]))
                 self.SP -= 1
             elif(DR == 'ECHO'):
-                output.insertPlainText(str(self.memory[self.SP]))
+                vm_gui.outputBox.insertPlainText(str(self.memory[self.SP]))
                 self.SP -= 1 
             elif(DR == 'AND'):
                 self.memory[self.SP - 1] = int(self.memory[self.SP - 1]) & int(self.memory[self.SP])
