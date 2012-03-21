@@ -13,7 +13,10 @@ class RMWindow(QtGui.QMainWindow):
         self.fileName = None
         #self.window_list = []
         
-        self.setGeometry(0, 0, 1020, 340)
+        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Windows'))
+        QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
+        
+        self.setGeometry(0, 0, 870, 340)
         self.move(self.frameGeometry().topLeft())
         self.setWindowTitle('Real Machine')
         self.centralWidget = QtGui.QWidget(self)
@@ -24,11 +27,9 @@ class RMWindow(QtGui.QMainWindow):
         
         #---------------------------------------------------------------------
         self.init_table(self.row)
+        self.init_load_btn()
+        self.init_reset_btn()
         #---------------------------------------------------------------------
-        self.loadButton = QtGui.QPushButton(self.centralWidget)
-        self.loadButton.setGeometry(QtCore.QRect(800, 20, 200, 297))
-        self.loadButton.setText("Load")
-        self.loadButton.clicked.connect(self.load_btn_handler)
         
     def load_btn_handler(self):
         self.show_file_dialog()
@@ -40,6 +41,10 @@ class RMWindow(QtGui.QMainWindow):
             self.connect(self.vmWindow, QtCore.SIGNAL("vm_win_close( QWidget * )"), self.vm_close_sig_handler)
             self.vmWindow.show()
             #self.window_list.append(self.vmWindow)
+    
+    def reset_btn_handler(self):
+        self.rm.clear_mem()
+        self.fill_rm()
     
     def fill_rm(self):
         for i in range(self.row):
@@ -59,14 +64,26 @@ class RMWindow(QtGui.QMainWindow):
             self.tableWidget.setHorizontalHeaderItem(i, item)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(45)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18)  
-        #self.tableWidget.horizontalHeader().setStretchLastSection(False)
       
     def show_file_dialog(self):
         directory = QtCore.QDir.currentPath()
         fDialog = QtGui.QFileDialog()
         self.fileName, _ = fDialog.getOpenFileName(self, 'Open file', directory, "*.pr")
+        
     def vm_close_sig_handler(self):
         self.rm.remove_vm()
+        
+    def init_load_btn(self):
+        self.loadButton = QtGui.QPushButton(self.centralWidget)
+        self.loadButton.setGeometry(QtCore.QRect(800, 20, 50, 25))
+        self.loadButton.setText("Load")
+        self.loadButton.clicked.connect(self.load_btn_handler)
+        
+    def init_reset_btn(self):
+        self.resetButton = QtGui.QPushButton(self.centralWidget)
+        self.resetButton.setGeometry(QtCore.QRect(800, 45, 50, 25))
+        self.resetButton.setText("Reset")
+        self.resetButton.clicked.connect(self.reset_btn_handler)
                 
 class VMWindow(QtGui.QFrame, RMWindow):
     def __init__(self, parent = None):
