@@ -20,7 +20,6 @@ class RealMachine():
         for i in range(16):
             self.memory[self.PPTR + i] = ""
 
-
     def get_new_page(self):
         empty_pos = -1
         paging_table = []
