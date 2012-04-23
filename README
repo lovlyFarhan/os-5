@@ -1,13 +1,1 @@
-Operating Systems course task 2
-implement simulation OS in desired language(we are writing in python3)
-Tadas branch
-
-krc dumaju nada zdelac tak stoby mozna byla daze mnoga vm srazu vrubac,
-eta ni slozna no ty dolzen kod narmalna prasmatrec i paniac sto k cemu,
-kagda vm akno zdelais close, no nuzna u toj vm vytascic PAGE i udalic ivo v rm.paging_table
-tak rabotait puslapiavimo, stob drugije magli zaniac ijo mesta,
-dla rm i vm dolzen byc to sam abject pamiaci, kak siciaz ja zdelal
-dla rm tak vsio risues sto jesc i dolzen abnavliatsa pastajanna bo vm budit miniac
-dla vm nada od vm.DS to vm.DS + 256
-nasciot vybrosa vm iz raboty iscio dumaju, paidzieji exception mogby kinuc kagda execute zakoncitsa
-no dla gui tak nikacit, znacit tam eta nadabudet reshac, vsprashyvaj esli cio
+Operating Systems course at Vilnius University
