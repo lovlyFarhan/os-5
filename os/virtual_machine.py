@@ -1,6 +1,6 @@
 
 class VirtualMachine():
-    def __init__(self, page, rm_memory):
+    def __init__(self, proc, page, rm_memory):
         self.PAGE = page
         self.DS = 0 + page
         self.CS = 64 + page

@@ -8,10 +8,9 @@ class Proccess():
         self.commands = [line.rstrip('\n').replace('\\n', '\n')
                 for line in file if line[0] != '#']
 
-
 class RealMachine():
     def __init__(self):
-        self.MAX_VMS = 2 
+        self.MAX_VMS = 1
         self.PPTR = self.MAX_VMS * 256
         self.clear_mem()
 
@@ -50,7 +49,7 @@ class RealMachine():
 
         for cmd, DR in zip(DS, range(DS.__len__())):
             if(cmd[0:2] == "DW"):
-                self.memory[DS_ptr + DR] = int(str(cmd)[3:])
+                self.memory[DS_ptr + DR] = int(cmd[3:])
             else:
                 self.memory[DS_ptr + DR] = cmd[3:]
         
@@ -59,11 +58,10 @@ class RealMachine():
         
         return page
 
-
     def start_vm(self, file_name):
         proc = Proccess(file_name)
         page = self.fill_mem(proc)
-        self.vm = VirtualMachine(page, self.memory)
+        self.vm = VirtualMachine(proc, page, self.memory)
 
 
     def remove_vm(self, page):
