@@ -1,0 +1,36 @@
+#program to raise given number to given degree
+DATA
+DW 3
+DW 5
+DW 1
+DB \n
+CODE
+#read number
+READ
+#put it to DS
+SD00
+#read base
+READ
+#put it to DS
+SD01
+DS00
+SD04
+#06
+DS04
+DS00
+MUL
+SD04
+DS01
+DS02
+SUB
+SD01
+DS01
+DS02
+CMP
+JL06
+DS04
+ECHO
+DS03
+ECHO
+HALT
+

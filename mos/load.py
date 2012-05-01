@@ -1,10 +1,14 @@
 
-
 from process import Process
-from real_machine import RM
+from rm import RM
+from definitions import Priority
 
 
 class Load(Process):
+    def __init__(self):
+        Process.__init__(self, Priority.MEDIUM)
+
+
     def run(self, filename):
         file = open(filename, 'r')
         commands = [line.rstrip('\n').replace('\\n', '\n')
@@ -27,6 +31,5 @@ class Load(Process):
             RM.memory[CS_ptr + DR] = cmd
         
         RM.last_vm = vm_page
-
 
 

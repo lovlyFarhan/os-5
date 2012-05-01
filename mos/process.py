@@ -6,7 +6,7 @@ from definitions import Priority
 class Process:
     list = []
 
-    def __init__(self, priority=Priority.LOW):
+    def __init__(self, state=State.BLOCKED, priority=Priority.LOW):
         self.state = State.BLOCKED
         self.priority = priority
         self.id = Process.get_new_id()
@@ -18,6 +18,5 @@ class Process:
             return 0
         else:
             return max([proc.id for proc in Process.list]) + 1
-
 
 
