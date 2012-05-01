@@ -13,11 +13,10 @@ class VM(Process):
         self.SP = self.SS
 
 
-    def exec_command(self):
+    def run(self):
         DR = str(RM.memory[self.IP])
         self.IP += 1
 
-        #try:
         if (DR[:2] == 'DS'):
             self.SP += 1
             RM.memory[self.SP] = RM.memory[self.DS + int(DR[2:])]
@@ -34,12 +33,15 @@ class VM(Process):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) * int(RM.memory[self.SP])
             self.SP -= 1
         elif (DR == 'DIV'):
-            RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
+            if RM.memory[self.SP] == 0:
+                RM.PI = 2
+            else:
+                RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
         elif (DR == 'DIV'):
             RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
             self.SP -= 1
         elif(DR == 'ECHO'):
-            vm_gui.outputBox.insertPlainText(str(RM.memory[self.SP]))
+            print(str(RM.memory[self.SP]))
             self.SP -= 1 
         elif(DR == 'AND'):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) & int(RM.memory[self.SP])
@@ -48,7 +50,8 @@ class VM(Process):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) | int(RM.memory[self.SP])
             self.SP -= 1
         elif(DR == 'READ'):
-            vm_gui.read_msg_box()
+            self.SP += 1
+            RM.memory[self.SP] = input()
         elif(DR == 'CMP'):
             if (int(RM.memory[self.SP - 1]) == int(RM.memory[self.SP])):
                 RM.memory[self.SP - 1] = 1
@@ -79,13 +82,8 @@ class VM(Process):
                 self.IP = self.CS + int(DR[2:])
             self.SP -= 1
         elif(DR == "HALT"):
-            return True
-        #else:
-                #vm_gui.msg_box_exception("Error: invalid command")
+            RM.SI = 3
+        else:
+            RM.PI = 1
              
-        #except ZeroDivisionError:
-        #    vm_gui.msg_box_exception("Error: division by zero")
-
-        #except Exception:
-        #    vm_gui.msg_box_exception("Error: unknown error")
 
