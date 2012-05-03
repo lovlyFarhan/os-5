@@ -4,8 +4,8 @@ from real_machine import RM
 
 
 class VM(Process):
-    def __init__(self, page):
-        self.PAGE = page
+    def __init__(self):
+        self.PAGE = RM.last_vm
         self.DS = 0 + page
         self.CS = 64 + page
         self.SS = 160 + page

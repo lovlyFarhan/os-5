@@ -1,6 +1,7 @@
 
 from process import Process
 from definitions import Priority
+from jobGovernor import JobGovernor
 
 
 class Main(Process):
@@ -9,5 +10,5 @@ class Main(Process):
 
 
     def run(self):
-        pass
+         JobGovernor()
 
