@@ -4,6 +4,7 @@ from rm import RM
 from definitions import Priority
 
 
+#it should load user's program's instuction to virtual memory
 class Load(Process):
     def __init__(self):
         Process.__init__(self, Priority.MEDIUM)
@@ -13,7 +14,8 @@ class Load(Process):
         file = open(filename, 'r')
         commands = [line.rstrip('\n').replace('\\n', '\n')
                 for line in file if line[0] != '#']
-    
+        
+        #vm will get this page number
         vm_page = RM.get_new_page()
         vm_addr = vm_page * RM.VM_SIZE
         DS = commands[1:commands.index("CODE")]
@@ -30,6 +32,7 @@ class Load(Process):
         for cmd, DR in zip(CS, range(CS.__len__())):
             RM.memory[CS_ptr + DR] = cmd
         
+        #vm will take it's page number from here
         RM.last_vm = vm_page
 
 

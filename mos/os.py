@@ -5,8 +5,7 @@ from init import Init
 
 #start os
 if __name__ == '__main__':
-    Init().run()
+    Init()
 
 
 
-print(Process.list)

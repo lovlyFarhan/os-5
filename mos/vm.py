@@ -1,18 +1,27 @@
 
+from definitions import State
 from process import Process
-from real_machine import RM
+from rm import RM
 
 
+#virtual machine - runs user's program
 class VM(Process):
     def __init__(self):
+        #page number
         self.PAGE = RM.last_vm
+        #data segment adress
         self.DS = 0 + page
+        #code segment adress
         self.CS = 64 + page
+        #stack segment adress
         self.SS = 160 + page
+        #instruction pointer
         self.IP = self.CS
+        #stack pointer
         self.SP = self.SS
 
 
+    #executing one line of user's program
     def run(self):
         DR = str(RM.memory[self.IP])
         self.IP += 1
@@ -33,14 +42,14 @@ class VM(Process):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) * int(RM.memory[self.SP])
             self.SP -= 1
         elif (DR == 'DIV'):
+            #if division by 0 - interrupt
             if RM.memory[self.SP] == 0:
                 RM.PI = 2
             else:
                 RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
-        elif (DR == 'DIV'):
-            RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
             self.SP -= 1
         elif(DR == 'ECHO'):
+            #interrupt???
             print(str(RM.memory[self.SP]))
             self.SP -= 1 
         elif(DR == 'AND'):
@@ -50,6 +59,7 @@ class VM(Process):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) | int(RM.memory[self.SP])
             self.SP -= 1
         elif(DR == 'READ'):
+            #interrupt???
             self.SP += 1
             RM.memory[self.SP] = input()
         elif(DR == 'CMP'):
@@ -82,8 +92,12 @@ class VM(Process):
                 self.IP = self.CS + int(DR[2:])
             self.SP -= 1
         elif(DR == "HALT"):
+            #wrong section??
+            self.state = State.FINISHED
+            #interrupt???
             RM.SI = 3
         else:
+            #wrong command
             RM.PI = 1
              
 
