@@ -9,7 +9,7 @@ class Process:
     list = []
 
     def __init__(self, state=State.BLOCKED, priority=Priority.LOW):
-        self.state = State.BLOCKED
+        self.state = state
         self.priority = priority
         #every process will have it own unique id
         self.id = Process.get_new_id()

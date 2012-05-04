@@ -2,12 +2,14 @@
 from definitions import State
 from process import Process
 from vm import VM
+from rm import RM
 
 
 #it should manage user's program
 class JobGovernor(Process):
 
-    def __init__(self):
+    def __init__(self, **args):
+        Process.__init__(self, **args)
         #creates virtual machine's instance
         self.vm = VM()
    
@@ -17,7 +19,10 @@ class JobGovernor(Process):
         #sets timer for user's program
         RM.TI = 5
         #and runs it until time is up or program has finished executing
-        while((RM.TI != 0) or (vm.state != State.FINISHED)):
+        while(RM.TI != 0):
+            if self.vm.state == State.FINISHED:
+                self.state = State.FINISHED
+                break
             #executes one vm's command
             self.vm.run()
             #decreases timer

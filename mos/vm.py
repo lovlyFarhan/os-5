@@ -7,14 +7,15 @@ from rm import RM
 #virtual machine - runs user's program
 class VM(Process):
     def __init__(self):
+        Process.__init__(self)
         #page number
         self.PAGE = RM.last_vm
         #data segment adress
-        self.DS = 0 + page
+        self.DS = 0 + self.PAGE
         #code segment adress
-        self.CS = 64 + page
+        self.CS = 64 + self.PAGE
         #stack segment adress
-        self.SS = 160 + page
+        self.SS = 160 + self.PAGE
         #instruction pointer
         self.IP = self.CS
         #stack pointer
@@ -50,7 +51,7 @@ class VM(Process):
             self.SP -= 1
         elif(DR == 'ECHO'):
             #interrupt???
-            print(str(RM.memory[self.SP]))
+            print(str(RM.memory[self.SP]), end="")
             self.SP -= 1 
         elif(DR == 'AND'):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) & int(RM.memory[self.SP])

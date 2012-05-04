@@ -2,16 +2,18 @@
 from process import Process
 from rm import RM
 from definitions import Priority
+from definitions import State
 
 
 #it should load user's program's instuction to virtual memory
 class Load(Process):
     def __init__(self):
-        Process.__init__(self, Priority.MEDIUM)
+        Process.__init__(self, priority=Priority.MEDIUM)
 
+    filename = None
 
-    def run(self, filename):
-        file = open(filename, 'r')
+    def run(self):
+        file = open(Load.filename, 'r')
         commands = [line.rstrip('\n').replace('\\n', '\n')
                 for line in file if line[0] != '#']
         
@@ -34,5 +36,6 @@ class Load(Process):
         
         #vm will take it's page number from here
         RM.last_vm = vm_page
+        self.state = State.BLOCKED
 
 

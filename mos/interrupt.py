@@ -7,7 +7,7 @@ from definitions import Priority
 #it should spot interrupt as soon as occurs
 class Interrupt(Process):
     def __init__(self):
-        Process.__init__(self, Priority.HIGH)
+        Process.__init__(self, priority=Priority.HIGH)
 
 
     def run(self):
