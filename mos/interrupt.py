@@ -2,36 +2,66 @@
 from process import Process
 from rm import RM
 from definitions import Priority
+from definitions import State
+from definitions import TIMER_PERIOD
+from vm import VM
+from load import Load
 
 
-#it should spot interrupt as soon as occurs
+#it should spot interrupt as soon as it occurs
 class Interrupt(Process):
     def __init__(self):
-        Process.__init__(self, priority=Priority.HIGH)
+        Process.__init__(self, state=State.READY, priority=Priority.HIGH)
 
 
     def run(self):
         #wrong operation
         if(RM.PI == 1):
-            pass
+            print("wrong operation in ", RM.current_vm.PAGE)
+            RM.current_vm.state = State.ABORTED
+            RM.TI = 0
         #division by zero
         elif(RM.PI == 2):
-            pass
-        #perhapse those three will be optional
-        #puts
-        elif(RM.SI == 1):
+            print("division by zero in ", RM.current_vm.PAGE)
+            RM.current_vm.state = State.ABORTED
+            RM.TI = 0
+        #error while loading user's program
+        elif(RM.PI == 3):
+            print("error while trying to load ", Load.filename)
+        #success loading user's program
+        elif(RM.PI == 4):
+            Process.find_by_name("Main").state = State.READY 
+        #perhapse those two will be optional
+        if(RM.SI == 1):
             pass
         #read
         elif(RM.SI == 2):
             pass
         #halt
         elif(RM.SI == 3):
-            pass
+            RM.current_vm.state = State.FINISHED
+            RM.TI = 0
         #watchdog
         elif(RM.SI == 4):
             pass
         #timer
-        elif(RM.TI == 0):
-            pass
+        if(RM.TI == 0):
+            #get all active vms
+            vms = VM.get_active()
+            for vm in vms:
+                print(vm, "   ", vm.PAGE)
+            if vms != []:
+                #this vm already worked
+                vms[0].state = State.BLOCKED
+                #rotate vms list
+                VM.rotate()
+                #set timer for vm
+                RM.current_vm = vms[0]
+                #make first ready
+                vms[0].state = State.READY
+                RM.TI = 10
+        #clear
+        RM.PI = 0
+        RM.SI = 0
 
 

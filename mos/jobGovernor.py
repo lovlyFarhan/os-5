@@ -19,8 +19,8 @@ class JobGovernor(Process):
         #sets timer for user's program
         RM.TI = 5
         #and runs it until time is up or program has finished executing
-        while(RM.TI != 0):
-            if self.vm.state == State.FINISHED:
+        while(RM.TI != 0 and self.state != State.FINISHED):
+            if self.vm.state == State.FINISHED or self.vm.state == State.ABORTED:
                 self.state = State.FINISHED
                 break
             #executes one vm's command

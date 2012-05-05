@@ -9,7 +9,11 @@ class Enum(set):
 
 
 #process will have working state
-State = Enum(["RUNNING", "BLOCKED", "READY", "STOPPED", "FINISHED"])
+State = Enum(["RUNNING", "BLOCKED", "READY", "ABORTED", "FINISHED"])
 
 #and priority
 Priority = Enum(["HIGH", "MEDIUM", "LOW"])
+
+
+#period for vm execution
+TIMER_PERIOD = 10

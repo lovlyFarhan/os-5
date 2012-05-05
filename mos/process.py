@@ -11,7 +11,7 @@ class Process:
     def __init__(self, state=State.BLOCKED, priority=Priority.LOW):
         self.state = state
         self.priority = priority
-        #every process will have it own unique id
+        #every process will have its own unique id
         self.id = Process.get_new_id()
         Process.list.append(self)
 
@@ -22,4 +22,10 @@ class Process:
         else:
             return max([proc.id for proc in Process.list]) + 1
 
+    def find_by_name(name):
+        for proc in Process.list:
+            if proc.__class__.__name__ == name:
+                return proc
+
+    
 

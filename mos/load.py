@@ -13,29 +13,37 @@ class Load(Process):
     filename = None
 
     def run(self):
-        file = open(Load.filename, 'r')
-        commands = [line.rstrip('\n').replace('\\n', '\n')
-                for line in file if line[0] != '#']
+        try:
+            file = open(Load.filename, 'r')
+            commands = [line.rstrip('\n').replace('\\n', '\n')
+                    for line in file if line[0] != '#']
+            
+            #vm will get this page number
+            vm_page = RM.get_new_page()
+            vm_addr = vm_page * RM.VM_SIZE
+            DS = commands[1:commands.index("CODE")]
+            CS = commands[commands.index("CODE") + 1:]
+            DS_ptr = vm_addr
+            CS_ptr = vm_addr + 64 
+            #fill data segment
+            for cmd, DR in zip(DS, range(DS.__len__())):
+                if(cmd[0:2] == "DW"):
+                    RM.memory[DS_ptr + DR] = int(cmd[3:])
+                else:
+                    RM.memory[DS_ptr + DR] = cmd[3:]
+            #fill code segment
+            for cmd, DR in zip(CS, range(CS.__len__())):
+                RM.memory[CS_ptr + DR] = cmd
         
-        #vm will get this page number
-        vm_page = RM.get_new_page()
-        vm_addr = vm_page * RM.VM_SIZE
-        DS = commands[1:commands.index("CODE")]
-        CS = commands[commands.index("CODE") + 1:]
-        DS_ptr = vm_addr
-        CS_ptr = vm_addr + 64 
+            #vm will take it's page number from here
+            RM.last_vm = vm_page
+            self.state = State.BLOCKED
+            #success
+            RM.PI = 4
+        except Exception:
+            #something gone wrong
+            self.state = State.BLOCKED
+            RM.PI = 3
 
-        for cmd, DR in zip(DS, range(DS.__len__())):
-            if(cmd[0:2] == "DW"):
-                RM.memory[DS_ptr + DR] = int(cmd[3:])
-            else:
-                RM.memory[DS_ptr + DR] = cmd[3:]
-        
-        for cmd, DR in zip(CS, range(CS.__len__())):
-            RM.memory[CS_ptr + DR] = cmd
-        
-        #vm will take it's page number from here
-        RM.last_vm = vm_page
-        self.state = State.BLOCKED
 
 

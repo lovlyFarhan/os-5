@@ -9,8 +9,9 @@ class RM():
     PPTR = MAX_VMS * VM_SIZE
     SI = None
     PI = None
-    TI = None
+    TI = 0
     last_vm = None
+    current_vm = None
 
     #virtual memory
     memory = {i : "" for i in range(MAX_VMS * VM_SIZE)}

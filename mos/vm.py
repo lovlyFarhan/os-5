@@ -6,8 +6,25 @@ from rm import RM
 
 #virtual machine - runs user's program
 class VM(Process):
-    def __init__(self):
-        Process.__init__(self)
+    #all vms will be stored here
+    list = []
+
+    def rotate():
+        VM.list.append(VM.list.pop(0))
+
+
+    def get_active():
+        active = []
+        for proc in VM.list:
+            if proc.state != State.FINISHED and proc.state != State.ABORTED:
+                active.append(proc)
+
+        return active
+
+
+    def __init__(self, **args):
+        Process.__init__(self, **args)
+        VM.list.append(self)
         #page number
         self.PAGE = RM.last_vm
         #data segment adress
@@ -22,11 +39,12 @@ class VM(Process):
         self.SP = self.SS
 
 
-    #executing one line of user's program
+    #executing command of user's program
     def run(self):
         DR = str(RM.memory[self.IP])
         self.IP += 1
-
+        RM.TI -= 1
+        
         if (DR[:2] == 'DS'):
             self.SP += 1
             RM.memory[self.SP] = RM.memory[self.DS + int(DR[2:])]
@@ -94,7 +112,7 @@ class VM(Process):
             self.SP -= 1
         elif(DR == "HALT"):
             #wrong section??
-            self.state = State.FINISHED
+            #self.state = State.FINISHED
             #interrupt???
             RM.SI = 3
         else:
