@@ -11,7 +11,7 @@ class Main(Process):
     def __init__(self):
         Process.__init__(self, Priority.MEDIUM)
 
-    #creates new jobGovernor instance
+    #creates new jobGovernor instance?
     def run(self):
          VM()
          self.state = State.BLOCKED

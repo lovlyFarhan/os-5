@@ -5,29 +5,25 @@ from definitions import State
 from load import Load
 #from jobGovernor import JobGovernor
 from main import Main
+from rm import RM
+
 
 #class which manages all process, decides which should be running etc.
 class ProcessPlaner():
 
     #should pick process which are waiting for execution by highest priority
     def start(self):
-        true = True
-        false = True
-        Load()
         Load.filename = 'jobs/first.pr'
-        Process.find_by_name("Load").run()
-        #Main().run()
-        Load.filename = 'jobs/second.pr'
-        #Process.find_by_name("Main").run()
         true = 10
         while True:
             todo_list = self.sort_by_priority()
             for proc in todo_list:
                 if proc.state == State.READY:
+                    proc.state = State.RUNNING
                     proc.run()
             if true == 0:
-                Process.find_by_name("Load").state = State.READY
-            #print(RM.memory)    
+                true = 10
+                exec(input())
             true -= 1
 
     def sort_by_priority(self):

@@ -23,6 +23,7 @@ class Load(Process):
             vm_addr = vm_page * RM.VM_SIZE
             DS = commands[1:commands.index("CODE")]
             CS = commands[commands.index("CODE") + 1:]
+            RM.last_vm_lc = CS.__len__() * 10
             DS_ptr = vm_addr
             CS_ptr = vm_addr + 64 
             #fill data segment

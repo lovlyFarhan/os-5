@@ -27,12 +27,14 @@ class VM(Process):
         VM.list.append(self)
         #page number
         self.PAGE = RM.last_vm
+        self.LC = RM.last_vm_lc
+        vm_addr = self.PAGE * RM.VM_SIZE
         #data segment adress
-        self.DS = 0 + self.PAGE
+        self.DS = 0 + vm_addr
         #code segment adress
-        self.CS = 64 + self.PAGE
+        self.CS = 64 + vm_addr
         #stack segment adress
-        self.SS = 160 + self.PAGE
+        self.SS = 160 + vm_addr
         #instruction pointer
         self.IP = self.CS
         #stack pointer
@@ -44,6 +46,7 @@ class VM(Process):
         DR = str(RM.memory[self.IP])
         self.IP += 1
         RM.TI -= 1
+        self.LC -= 1
         
         if (DR[:2] == 'DS'):
             self.SP += 1
@@ -118,5 +121,7 @@ class VM(Process):
         else:
             #wrong command
             RM.PI = 1
+
+        self.state = State.READY
              
 

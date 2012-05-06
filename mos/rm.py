@@ -11,6 +11,7 @@ class RM():
     PI = None
     TI = 0
     last_vm = None
+    last_vm_lc = None
     current_vm = None
 
     #virtual memory
