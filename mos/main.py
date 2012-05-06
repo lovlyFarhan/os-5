@@ -1,7 +1,6 @@
 
 from process import Process
 from definitions import Priority
-from jobGovernor import JobGovernor
 from definitions import State
 from vm import VM
 
