@@ -45,10 +45,12 @@ class Interrupt(Process):
         #halt
         elif(RM.SI == 3):
             RM.current_vm.state = State.FINISHED
+            RM.current_vm = None
             RM.TI = 0
         #watchdog
         elif(RM.SI == 4):
-            pass
+            RM.current_vm.state = State.ABORTED
+            RM.current_vm = None
         #timer
         if(RM.TI == 0):
             #get all active vms
@@ -61,7 +63,7 @@ class Interrupt(Process):
                 #rotate vms list
                 VM.rotate()
                 #set timer for vm
-                RM.current_vm = vms[0]
+                #RM.current_vm = vms[0]
                 #make first ready
                 vms[0].state = State.READY
                 RM.TI = TIMER_PERIOD

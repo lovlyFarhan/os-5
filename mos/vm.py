@@ -43,6 +43,7 @@ class VM(Process):
 
     #executing command of user's program
     def run(self):
+        RM.current_vm = self
         DR = str(RM.memory[self.IP])
         self.IP += 1
         RM.TI -= 1
@@ -65,7 +66,7 @@ class VM(Process):
             self.SP -= 1
         elif (DR == 'DIV'):
             #if division by 0 - interrupt
-            if RM.memory[self.SP] == 0:
+            if int(RM.memory[self.SP]) == 0:
                 RM.PI = 2
             else:
                 RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
