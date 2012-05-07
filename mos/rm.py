@@ -7,8 +7,8 @@ class RM():
     #virtual machine memory size
     VM_SIZE = 256
     PPTR = MAX_VMS * VM_SIZE
-    SI = None
-    PI = None
+    SI = 0
+    PI = 0
     TI = 0
     last_vm = None
     last_vm_lc = None

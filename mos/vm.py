@@ -115,9 +115,6 @@ class VM(Process):
                 self.IP = self.CS + int(DR[2:])
             self.SP -= 1
         elif(DR == "HALT"):
-            #wrong section??
-            #self.state = State.FINISHED
-            #interrupt???
             RM.SI = 3
         else:
             #wrong command

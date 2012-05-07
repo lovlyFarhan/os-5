@@ -43,6 +43,10 @@ class Load(Process):
             RM.PI = 4
         except Exception:
             #something gone wrong
+            #clear mem which tried to load
+            #for addr in(range(vm_addr, vm_addr + 256)):
+            #    RM.memory[addr] = ''
+
             self.state = State.BLOCKED
             RM.PI = 3
 
