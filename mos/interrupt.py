@@ -12,21 +12,22 @@ from load import Load
 class Interrupt(Process):
     def __init__(self):
         Process.__init__(self, state=State.READY, priority=Priority.HIGH)
+    
+    def kill_vm():
+        RM.current_vm.state = State.ABORTED
+        RM.current_vm = None
+        RM.TI = 0
 
 
     def run(self):
         #wrong operation
         if(RM.PI == 1):
             print("wrong operation in ", RM.current_vm.PAGE)
-            RM.current_vm.state = State.ABORTED
-            RM.current_vm = None
-            RM.TI = 0
+            Interrupt.kill_vm()   
         #division by zero
         elif(RM.PI == 2):
             print("division by zero in ", RM.current_vm.PAGE)
-            RM.current_vm.state = State.ABORTED
-            RM.current_vm = None
-            RM.TI = 0
+            Interrupt.kill_vm()
         #error while loading user's program
         elif(RM.PI == 3):
             print("error while trying to load ", Load.filename)
@@ -36,7 +37,7 @@ class Interrupt(Process):
         #test
         elif(RM.PI == 5):
             Process.find_by_name("Load").state = State.READY
-        #perhapse those two will be optional
+        #perhaps those two will be optional
         if(RM.SI == 1):
             pass
         #read
@@ -49,8 +50,7 @@ class Interrupt(Process):
             RM.TI = 0
         #watchdog
         elif(RM.SI == 4):
-            RM.current_vm.state = State.ABORTED
-            RM.current_vm = None
+            Interrupt.kill_vm()
         #timer
         if(RM.TI == 0):
             #get all active vms
@@ -62,11 +62,16 @@ class Interrupt(Process):
                 vms[0].state = State.BLOCKED
                 #rotate vms list
                 VM.rotate()
-                #set timer for vm
-                #RM.current_vm = vms[0]
                 #make first ready
                 vms[0].state = State.READY
+                #set timer for vm
                 RM.TI = TIMER_PERIOD
+                #turn on watchdog
+                Process.find_by_name("Watchdog").state = State.READY
+            else:
+                #no need to use watchdog if there is no user's programs
+                Process.find_by_name("Watchdog").state = State.BLOCKED
+
         #clear
         RM.PI = 0
         RM.SI = 0

@@ -5,12 +5,12 @@ from definitions import State
 from vm import VM
 
 
-#it should operate with jobGovernor process
+#it should operate with VM process
 class Main(Process):
     def __init__(self):
         Process.__init__(self, Priority.MEDIUM)
 
-    #creates new jobGovernor instance?
+    #creates new VM process
     def run(self):
          VM()
          self.state = State.BLOCKED
