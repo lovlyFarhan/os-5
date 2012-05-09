@@ -61,6 +61,9 @@ class Frame(QtGui.QFrame):
         return rightFrame
     
     def createVMview(self):
+        
+        self.scrollBar = QtGui.QScrollBar()
+        
         dialog = QtGui.QDialog()
         scrolllayout = QtGui.QVBoxLayout()
 
@@ -68,12 +71,18 @@ class Frame(QtGui.QFrame):
         scrollwidget.setLayout(scrolllayout)
 
         scroll = QtGui.QScrollArea()
-        scroll.setWidgetResizable(True)  # Set to make the inner widget resize with scroll area
+        scroll.setWidgetResizable(True)  
         scroll.setWidget(scrollwidget)
+        
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        
+        scroll.setVerticalScrollBar(self.scrollBar)
+        
 
-        self.groupboxesList = []  # Keep a reference to groupboxes for later use
+        self.groupboxesList = []  
         for i in range(16):    
             groupbox = QtGui.QGroupBox("VM #" + '%d' % i)
+            groupbox.setMinimumHeight(395)
             grouplayout = QtGui.QVBoxLayout()
             grouplayout.addWidget(self.createRegisterTree())
             grouplayout.addWidget(self.createOutputBox())
@@ -81,12 +90,14 @@ class Frame(QtGui.QFrame):
             groupbox.setLayout(grouplayout)
             scrolllayout.addWidget(groupbox)
             self.groupboxesList.append(groupbox)
+        
+        groupbox.setMaximumHeight(100)
         layout = QtGui.QHBoxLayout()
         layout.addWidget(scroll)
         dialog.setLayout(layout)
         dialog.setMinimumWidth(250)
         dialog.setMaximumWidth(250)
-           
+        
         return dialog
     
     def createMemoryTable(self):
@@ -147,7 +158,7 @@ class Frame(QtGui.QFrame):
     def createOutputBox(self):
         groupBox = QtGui.QGroupBox("Output")
         groupBox.setMaximumWidth(169)    
-        groupBox.setMaximumHeight(100)
+        groupBox.setMaximumHeight(120)
         output = QtGui.QTextEdit(self)
 #        output.setMaximumWidth(198)    
 #        output.setMaximumHeight(100)
@@ -305,6 +316,7 @@ class Frame(QtGui.QFrame):
         self.fillProcessTree()
         self.updateInteruptBox()
         if OS.PP.last_proc.__class__.__name__ == "VM":
+            self.moveSlider(OS.PP.last_proc)
             self.fillVMTree(OS.PP.last_proc)
             self.fillMemoryTable(OS.PP.last_proc.PAGE)
         if OS.PP.last_proc.__class__.__name__ == "Output":
@@ -347,6 +359,9 @@ class Frame(QtGui.QFrame):
         outputbox = groupbox.children()[2].children()[1]
         outputbox.insertPlainText(Output.String)
         
+    def moveSlider(self, proc):
+        x = proc.PAGE
+        self.scrollBar.setSliderPosition(402 * x)
         
 if __name__ == '__main__':
 
