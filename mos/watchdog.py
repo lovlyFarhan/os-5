@@ -13,7 +13,6 @@ class Watchdog(Process):
     #checks if there is no process which get into lifecycle
     def run(self):
         if(RM.current_vm and RM.current_vm.LC < 0):
-            RM.current_vm.state = State.ABORTED
-            RM.current_vm = None
+            RM.SI = 4
 
         self.state = State.READY
