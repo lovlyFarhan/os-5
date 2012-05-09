@@ -273,7 +273,11 @@ class Frame(QtGui.QWidget):
         processInfo = []
         
         for process in Process.list:
-            processInfo = [process.__class__.__name__, str(process.id), process.state, process.priority]
+            if process.__class__.__name__ == "VM":
+                processInfo = [process.__class__.__name__ + " #" + str(process.PAGE),
+                               str(process.id), process.state, process.priority]
+            else:    
+                processInfo = [process.__class__.__name__, str(process.id), process.state, process.priority]
             processList.append(processInfo)
         
         for item in processList:
