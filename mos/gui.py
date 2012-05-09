@@ -89,15 +89,15 @@ class Frame(QtGui.QWidget):
     
     def createMemoryTable(self):
         
-        self.arial_8 = QtGui.QFont()
-        self.arial_8.setPointSize(8)
-        self.arial_8.setFamily("Arial")
+        self.arial_10 = QtGui.QFont()
+        self.arial_10.setPointSize(9)
+#        self.arial_10.setFamily("Arial")
         
         self.tableWidget = QtGui.QTableWidget()
-        #self.tableWidget.setFont(self.arial_8)
+        self.tableWidget.setFont(self.arial_10)
 #        tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        #self.tableWidget.setMinimumWidth(653)
-        #self.tableWidget.setMaximumWidth(653)
+        self.tableWidget.setMinimumWidth(647)
+        self.tableWidget.setMaximumWidth(647)
         self.tableWidget.setColumnCount(16)
         self.tableWidget.setRowCount(256)
         self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
@@ -106,7 +106,7 @@ class Frame(QtGui.QWidget):
             list.append(str(hex(i)[2:]).upper())
         self.tableWidget.setHorizontalHeaderLabels(list)
         self.tableWidget.setVerticalHeaderLabels(list)
-        self.tableWidget.horizontalHeader().setDefaultSectionSize(38)
+        self.tableWidget.horizontalHeader().setDefaultSectionSize(40)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18) 
         
         return self.tableWidget
@@ -316,7 +316,7 @@ class Frame(QtGui.QWidget):
             for j in range(16):
                 if str(RM.memory[pptr + i * 16 + j]) != '':
                     item = QtGui.QTableWidgetItem(str(RM.memory[pptr + i * 16 + j]))
-                #item.setFont(self.arial_8)
+                    item.setFont(self.arial_10)
                     self.tableWidget.setItem(vm_page * 16 + i, j, item)
                 
     def fillVMTree(self, proc):
