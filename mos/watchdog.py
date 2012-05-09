@@ -8,7 +8,7 @@ from rm import RM
 #process responsible for lifecycle of user's programs
 class Watchdog(Process):
     def __init__(self):
-        Process.__init__(self, state=State.READY, priority=Priority.MEDIUM)
+        Process.__init__(self, state=State.BLOCKED, priority=Priority.MEDIUM)
     
     #checks if there is no process which get into lifecycle
     def run(self):

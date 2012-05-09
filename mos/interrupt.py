@@ -62,8 +62,12 @@ class Interrupt(Process):
                 vms[0].state = State.BLOCKED
                 #rotate vms list
                 VM.rotate()
+                #vms.append(vms.pop(0))
                 #make first ready
-                vms[0].state = State.READY
+                if vms.__len__() > 1:
+                    vms[1].state = State.READY
+                else:
+                    vms[0].state = State.READY
                 #set timer for vm
                 RM.TI = TIMER_PERIOD
                 #turn on watchdog
