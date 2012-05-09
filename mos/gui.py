@@ -5,16 +5,18 @@ from rm import RM
 from vata_os import OS
 from load import Load
 from vm import VM
+from output import Output
 
 
-class Frame(QtGui.QWidget):
+class Frame(QtGui.QFrame):
     
     def __init__(self, parent=None):
         super(Frame, self).__init__(parent)
         
+#        self.setFrameStyle(QtGui.QFrame.StyledPanel)
+#        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
-        
-        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Windows'))
+        QtGui.QApplication.setStyle("Windows")
         QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
         self.col = QtGui.QColor(159, 182, 205)
         
@@ -242,7 +244,7 @@ class Frame(QtGui.QWidget):
     def createCloseBtn(self):
         closeBtn = QtGui.QPushButton()
         closeBtn.setText("CLOSE")
-#        loadBtn.clicked.connect(self.run_btn_handler)
+        closeBtn.clicked.connect(self.closeBtnHandler)
         
         return closeBtn
     
@@ -304,11 +306,16 @@ class Frame(QtGui.QWidget):
         self.updateInteruptBox()
         if OS.PP.last_proc.__class__.__name__ == "VM":
             self.fillVMTree(OS.PP.last_proc)
-            self.fillMemoryTable(OS.PP.last_proc.PAGE) 
+            self.fillMemoryTable(OS.PP.last_proc.PAGE)
+        if OS.PP.last_proc.__class__.__name__ == "Output":
+                self.printOutput()
+        
         
     def loadBtnHandler(self):
         self.createFileDialog()
         
+    def closeBtnHandler(self):
+        sys.exit()
         
     def fillMemoryTable(self, vm_page):
         pptr = vm_page * 256
@@ -333,6 +340,13 @@ class Frame(QtGui.QWidget):
             items = QtGui.QTreeWidgetItem(registerTree, values)
             for count in range(registerTree.columnCount()):
                 items.setTextAlignment(count, self.center)
+                
+    def printOutput(self):
+        
+        groupbox = self.groupboxesList[RM.current_vm.PAGE]
+        outputbox = groupbox.children()[2].children()[1]
+        outputbox.insertPlainText(Output.String)
+        
         
 if __name__ == '__main__':
 

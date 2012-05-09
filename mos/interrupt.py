@@ -39,7 +39,9 @@ class Interrupt(Process):
             Process.find_by_name("Load").state = State.READY
         #perhaps those two will be optional
         if(RM.SI == 1):
-            pass
+            RM.current_vm.state = State.BLOCKED
+            Process.find_by_name("Output").state = State.READY
+#            pass
         #read
         elif(RM.SI == 2):
             pass
