@@ -128,10 +128,10 @@ class Frame(QtGui.QWidget):
         registerTree.headerItem().setTextAlignment(0, center)
         registerTree.headerItem().setText(1, "VALUE")
         registerTree.headerItem().setTextAlignment(1, center)
-        for i in range(6):
-            item = QtGui.QTreeWidgetItem(registerTree)
-            item.setTextAlignment(0, center)
-            item.setTextAlignment(1, center) 
+#        for i in range(6):
+#            item = QtGui.QTreeWidgetItem(registerTree)
+#            item.setTextAlignment(0, center)
+#            item.setTextAlignment(1, center) 
 #        select_cell(self.rm.vm.IP)
 #        vbox = QtGui.QVBoxLayout()
 #        vbox.addWidget(registerTree)
@@ -296,17 +296,17 @@ class Frame(QtGui.QWidget):
         self.loadBtn.setEnabled(True)
         OS.PP.run_once()
         self.fillProcessTree()
-        self.fillRM()
+        self.fillMemoryTable()
         self.updateInteruptBox()
         if OS.PP.last_proc.__class__.__name__ == "VM":
-            self.updateVM(OS.PP.last_proc)
+            self.fillVMTree(OS.PP.last_proc)
         
         
     def loadBtnHandler(self):
         self.createFileDialog()
         
         
-    def fillRM(self):
+    def fillMemomryTable(self):
         row = 16
         column = 256
         for i in range(row):
@@ -314,7 +314,7 @@ class Frame(QtGui.QWidget):
                 item = QtGui.QTableWidgetItem(str(RM.memory[16 * i + j]))
                 self.tableWidget.setItem(i, j, item)
                 
-    def updateVM(self, proc):
+    def fillVMTree(self, proc):
         registers = ['DS', 'CS', 'SS', 'IP', 'SP']
         reg_values = [proc.DS, proc.CS, proc.SS, 
                 proc.IP, proc.SP]
