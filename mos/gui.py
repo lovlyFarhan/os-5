@@ -94,10 +94,10 @@ class Frame(QtGui.QWidget):
         self.arial_8.setFamily("Arial")
         
         self.tableWidget = QtGui.QTableWidget()
-        self.tableWidget.setFont(self.arial_8)
+        #self.tableWidget.setFont(self.arial_8)
 #        tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget.setMinimumWidth(653)
-        self.tableWidget.setMaximumWidth(653)
+        #self.tableWidget.setMinimumWidth(653)
+        #self.tableWidget.setMaximumWidth(653)
         self.tableWidget.setColumnCount(16)
         self.tableWidget.setRowCount(256)
         self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
@@ -301,24 +301,23 @@ class Frame(QtGui.QWidget):
         self.loadBtn.setEnabled(True)
         OS.PP.run_once()
         self.fillProcessTree()
-        self.fillMemoryTable()
         self.updateInteruptBox()
         if OS.PP.last_proc.__class__.__name__ == "VM":
             self.fillVMTree(OS.PP.last_proc)
-        
+            self.fillMemoryTable(OS.PP.last_proc.PAGE) 
         
     def loadBtnHandler(self):
         self.createFileDialog()
         
         
-    def fillMemoryTable(self):
-        row = 16
-        column = 256
-        for i in range(row):
-            for j in range(column):
-                item = QtGui.QTableWidgetItem(str(RM.memory[16 * i + j]))
-                item.setFont(self.arial_8)
-                self.tableWidget.setItem(i, j, item)
+    def fillMemoryTable(self, vm_page):
+        pptr = vm_page * 256
+        for i in range(16):
+            for j in range(16):
+                if str(RM.memory[pptr + i * 16 + j]) != '':
+                    item = QtGui.QTableWidgetItem(str(RM.memory[pptr + i * 16 + j]))
+                #item.setFont(self.arial_8)
+                    self.tableWidget.setItem(vm_page * 16 + i, j, item)
                 
     def fillVMTree(self, proc):
         
