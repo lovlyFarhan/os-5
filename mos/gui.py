@@ -74,7 +74,7 @@ class Frame(QtGui.QFrame):
         scroll.setWidgetResizable(True)  
         scroll.setWidget(scrollwidget)
         
-        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         
         scroll.setVerticalScrollBar(self.scrollBar)
         
