@@ -147,7 +147,7 @@ class Frame(QtGui.QFrame):
     def createOutputBox(self):
         groupBox = QtGui.QGroupBox("Output")
         groupBox.setMaximumWidth(169)    
-        groupBox.setMaximumHeight(70)
+        groupBox.setMaximumHeight(100)
         output = QtGui.QTextEdit(self)
 #        output.setMaximumWidth(198)    
 #        output.setMaximumHeight(100)
