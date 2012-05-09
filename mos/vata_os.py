@@ -15,10 +15,11 @@ signal.signal(signal.SIGINT, sig_handler)
 
 
 #start os
-if __name__ == '__main__':
+#if __name__ == '__main__':
+class OS:
     print("starting Vata os")
     Init()
-    ProcessPlaner().start()
+    PP = ProcessPlaner()
 
 
 

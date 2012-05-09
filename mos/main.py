@@ -8,7 +8,7 @@ from vm import VM
 #it should operate with VM process
 class Main(Process):
     def __init__(self):
-        Process.__init__(self, Priority.MEDIUM)
+        Process.__init__(self, priority = Priority.MEDIUM)
 
     #creates new VM process
     def run(self):

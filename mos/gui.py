@@ -4,6 +4,7 @@ from process import Process
 from rm import RM
 from vata_os import OS
 from load import Load
+from vm import VM
 
 
 class Frame(QtGui.QWidget):
@@ -68,7 +69,7 @@ class Frame(QtGui.QWidget):
         scroll.setWidgetResizable(True)  # Set to make the inner widget resize with scroll area
         scroll.setWidget(scrollwidget)
 
-        self.groupboxes = []  # Keep a reference to groupboxes for later use
+        self.groupboxesList = []  # Keep a reference to groupboxes for later use
         for i in range(16):    
             groupbox = QtGui.QGroupBox("VM #" + '%d' % i)
             grouplayout = QtGui.QVBoxLayout()
@@ -77,8 +78,7 @@ class Frame(QtGui.QWidget):
             grouplayout.addWidget(self.createInputBox())
             groupbox.setLayout(grouplayout)
             scrolllayout.addWidget(groupbox)
-            self.groupboxes.append(groupbox)
-
+            self.groupboxesList.append(groupbox)
         layout = QtGui.QHBoxLayout()
         layout.addWidget(scroll)
         dialog.setLayout(layout)
@@ -112,31 +112,31 @@ class Frame(QtGui.QWidget):
 #        groupBox.setMaximumWidth(220)    
 #        groupBox.setMaximumHeight(153)
         center = 0x0004
-        treeWidget = QtGui.QTreeWidget()
-        treeWidget.setMinimumWidth(172)
-        treeWidget.setMaximumWidth(172)
-        treeWidget.setMinimumHeight(132)
-        treeWidget.setMaximumHeight(132)
+        registerTree = QtGui.QTreeWidget()
+        registerTree.setMinimumWidth(172)
+        registerTree.setMaximumWidth(172)
+        registerTree.setMinimumHeight(132)
+        registerTree.setMaximumHeight(132)
         
-        treeWidget.setRootIsDecorated(False)
-        treeWidget.header().setDefaultSectionSize(85)
-        treeWidget.header().setMinimumSectionSize(20)
-        treeWidget.header().setStretchLastSection(False)
-        treeWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        treeWidget.setColumnCount(2)
-        treeWidget.headerItem().setText(0, "REGISTER")
-        treeWidget.headerItem().setTextAlignment(0, center)
-        treeWidget.headerItem().setText(1, "VALUE")
-        treeWidget.headerItem().setTextAlignment(1, center)
+        registerTree.setRootIsDecorated(False)
+        registerTree.header().setDefaultSectionSize(85)
+        registerTree.header().setMinimumSectionSize(20)
+        registerTree.header().setStretchLastSection(False)
+        registerTree.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        registerTree.setColumnCount(2)
+        registerTree.headerItem().setText(0, "REGISTER")
+        registerTree.headerItem().setTextAlignment(0, center)
+        registerTree.headerItem().setText(1, "VALUE")
+        registerTree.headerItem().setTextAlignment(1, center)
         for i in range(6):
-            item = QtGui.QTreeWidgetItem(treeWidget)
+            item = QtGui.QTreeWidgetItem(registerTree)
             item.setTextAlignment(0, center)
             item.setTextAlignment(1, center) 
 #        select_cell(self.rm.vm.IP)
 #        vbox = QtGui.QVBoxLayout()
-#        vbox.addWidget(treeWidget)
+#        vbox.addWidget(registerTree)
 #        groupBox.setLayout(vbox)
-        return treeWidget
+        return registerTree
             
     def createOutputBox(self):
         groupBox = QtGui.QGroupBox("Output")
@@ -192,9 +192,9 @@ class Frame(QtGui.QWidget):
         return groupBox
     
     def updateInteruptBox(self):
-        self.SIoutput.insertPlainText(str(RM.SI))
-        self.PIoutput.insertPlainText(str(RM.PI))
-        self.TIoutput.insertPlainText(str(RM.TI))
+        self.SIoutput.setText(str(RM.SI))
+        self.PIoutput.setText(str(RM.PI))
+        self.TIoutput.setText(str(RM.TI))
         
     def createProcessTree(self):
         groupBox = QtGui.QGroupBox("Processes")
@@ -203,7 +203,7 @@ class Frame(QtGui.QWidget):
         self.processTree = QtGui.QTreeWidget()
         self.processTree.setMinimumWidth(356)
         self.processTree.setMaximumWidth(356)
-#        treeWidget.setMinimumHeight(132)
+#        registerTree.setMinimumHeight(132)
         self.processTree.setRootIsDecorated(False)
         self.processTree.header().setDefaultSectionSize(89)
         self.processTree.header().setMinimumSectionSize(20)
@@ -219,7 +219,7 @@ class Frame(QtGui.QWidget):
         self.processTree.headerItem().setText(3, "PRIORITY")
         self.processTree.headerItem().setTextAlignment(3, self.center)
 #        for i in range(6):
-#            item = QtGui.QTreeWidgetItem(treeWidget)
+#            item = QtGui.QTreeWidgetItem(registerTree)
 #            item.setTextAlignment(0, center)
 #            item.setTextAlignment(1, center) 
         vbox = QtGui.QVBoxLayout()
@@ -298,6 +298,8 @@ class Frame(QtGui.QWidget):
         self.fillProcessTree()
         self.fillRM()
         self.updateInteruptBox()
+        if OS.PP.last_proc.__class__.__name__ == "VM":
+            self.updateVM(OS.PP.last_proc)
         
         
     def loadBtnHandler(self):
@@ -311,7 +313,18 @@ class Frame(QtGui.QWidget):
             for j in range(column):
                 item = QtGui.QTableWidgetItem(str(RM.memory[16 * i + j]))
                 self.tableWidget.setItem(i, j, item)
+                
+    def updateVM(self, proc):
+        registers = ['DS', 'CS', 'SS', 'IP', 'SP']
+        reg_values = [proc.DS, proc.CS, proc.SS, 
+                proc.IP, proc.SP]
+        groupbox = self.groupboxesList[proc.PAGE]
         
+        registerTree = groupbox.children()[1]
+        for i in range(5):
+            registerTree.topLevelItem(i).setText(0, registers[i])
+            registerTree.topLevelItem(i).setText(1, 
+                    str(hex(reg_values[i])).upper()[2:])
         
 if __name__ == '__main__':
 
