@@ -42,7 +42,7 @@ class Frame(QtGui.QWidget):
     
     def createRightFrame(self):
         rightFrame = QtGui.QFrame()
-        rightFrame.setStyleSheet("QWidget { background-color: %s }" %  
+        rightFrame.setStyleSheet("QWidget { background-color: %s }" % 
             self.col.name())
         
         rightGrid = QtGui.QGridLayout()
@@ -88,10 +88,16 @@ class Frame(QtGui.QWidget):
         return dialog
     
     def createMemoryTable(self):
+        
+        self.arial_8 = QtGui.QFont()
+        self.arial_8.setPointSize(8)
+        self.arial_8.setFamily("Arial")
+        
         self.tableWidget = QtGui.QTableWidget()
-#        tableWidget.setMinimumHeight(600)
+        self.tableWidget.setFont(self.arial_8)
 #        tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget.setMinimumWidth(615)
+        self.tableWidget.setMinimumWidth(653)
+        self.tableWidget.setMaximumWidth(653)
         self.tableWidget.setColumnCount(16)
         self.tableWidget.setRowCount(256)
         self.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
@@ -100,10 +106,8 @@ class Frame(QtGui.QWidget):
             list.append(str(hex(i)[2:]).upper())
         self.tableWidget.setHorizontalHeaderLabels(list)
         self.tableWidget.setVerticalHeaderLabels(list)
-        self.tableWidget.horizontalHeader().setDefaultSectionSize(45)
+        self.tableWidget.horizontalHeader().setDefaultSectionSize(38)
         self.tableWidget.verticalHeader().setDefaultSectionSize(18) 
-        
-        self.tableWidget.setMaximumWidth(700)    
         
         return self.tableWidget
     
@@ -111,7 +115,7 @@ class Frame(QtGui.QWidget):
 #        groupBox = QtGui.QGroupBox()
 #        groupBox.setMaximumWidth(220)    
 #        groupBox.setMaximumHeight(153)
-        center = 0x0004
+        self.center = 0x0004
         registerTree = QtGui.QTreeWidget()
         registerTree.setMinimumWidth(172)
         registerTree.setMaximumWidth(172)
@@ -125,9 +129,9 @@ class Frame(QtGui.QWidget):
         registerTree.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         registerTree.setColumnCount(2)
         registerTree.headerItem().setText(0, "REGISTER")
-        registerTree.headerItem().setTextAlignment(0, center)
+        registerTree.headerItem().setTextAlignment(0, self.center)
         registerTree.headerItem().setText(1, "VALUE")
-        registerTree.headerItem().setTextAlignment(1, center)
+        registerTree.headerItem().setTextAlignment(1, self.center)
 #        for i in range(6):
 #            item = QtGui.QTreeWidgetItem(registerTree)
 #            item.setTextAlignment(0, center)
@@ -199,7 +203,6 @@ class Frame(QtGui.QWidget):
     def createProcessTree(self):
         groupBox = QtGui.QGroupBox("Processes")
 #        groupBox.setMaximumWidth(220)    
-        self.center = 0x0004
         self.processTree = QtGui.QTreeWidget()
         self.processTree.setMinimumWidth(356)
         self.processTree.setMaximumWidth(356)
@@ -270,7 +273,11 @@ class Frame(QtGui.QWidget):
         processInfo = []
         
         for process in Process.list:
-            processInfo = [process.__class__.__name__, str(process.id), process.state, process.priority]
+            if process.__class__.__name__ == "VM":
+                processInfo = [process.__class__.__name__ + " #" + str(process.PAGE),
+                               str(process.id), process.state, process.priority]
+            else:    
+                processInfo = [process.__class__.__name__, str(process.id), process.state, process.priority]
             processList.append(processInfo)
         
         for item in processList:
@@ -310,6 +317,7 @@ class Frame(QtGui.QWidget):
         for i in range(row):
             for j in range(column):
                 item = QtGui.QTableWidgetItem(str(RM.memory[16 * i + j]))
+                item.setFont(self.arial_8)
                 self.tableWidget.setItem(i, j, item)
                 
     def fillVMTree(self, proc):
@@ -320,7 +328,6 @@ class Frame(QtGui.QWidget):
         
         groupbox = self.groupboxesList[proc.PAGE]
         registerTree = groupbox.children()[1]
-        
         registerTree.clear()
         
         for values in registers:
