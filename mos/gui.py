@@ -115,8 +115,8 @@ class Frame(QtGui.QWidget):
         registerTree = QtGui.QTreeWidget()
         registerTree.setMinimumWidth(172)
         registerTree.setMaximumWidth(172)
-        registerTree.setMinimumHeight(132)
-        registerTree.setMaximumHeight(132)
+        registerTree.setMinimumHeight(120)
+        registerTree.setMaximumHeight(120)
         
         registerTree.setRootIsDecorated(False)
         registerTree.header().setDefaultSectionSize(85)
@@ -265,9 +265,7 @@ class Frame(QtGui.QWidget):
         return runAllBtn
     
     def fillProcessTree(self):
-        
         self.processTree.clear()
-        
         processList = []
         processInfo = []
         
@@ -306,7 +304,7 @@ class Frame(QtGui.QWidget):
         self.createFileDialog()
         
         
-    def fillMemomryTable(self):
+    def fillMemoryTable(self):
         row = 16
         column = 256
         for i in range(row):
@@ -315,16 +313,20 @@ class Frame(QtGui.QWidget):
                 self.tableWidget.setItem(i, j, item)
                 
     def fillVMTree(self, proc):
-        registers = ['DS', 'CS', 'SS', 'IP', 'SP']
-        reg_values = [proc.DS, proc.CS, proc.SS, 
-                proc.IP, proc.SP]
-        groupbox = self.groupboxesList[proc.PAGE]
         
+        registers = [["DS", str(hex(proc.DS)).upper()[2:]], ["CS", str(hex(proc.CS)).upper()[2:]],
+                    ["SS", str(hex(proc.SS)).upper()[2:]],
+                    ["IP", str(hex(proc.IP)).upper()[2:]], ["SP", str(hex(proc.SP)).upper()[2:]]]
+        
+        groupbox = self.groupboxesList[proc.PAGE]
         registerTree = groupbox.children()[1]
-        for i in range(5):
-            registerTree.topLevelItem(i).setText(0, registers[i])
-            registerTree.topLevelItem(i).setText(1, 
-                    str(hex(reg_values[i])).upper()[2:])
+        
+        registerTree.clear()
+        
+        for values in registers:
+            items = QtGui.QTreeWidgetItem(registerTree, values)
+            for count in range(registerTree.columnCount()):
+                items.setTextAlignment(count, self.center)
         
 if __name__ == '__main__':
 
