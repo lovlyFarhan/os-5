@@ -339,8 +339,8 @@ class Frame(QtGui.QFrame):
             self.fillMemoryTable(OS.PP.last_proc.PAGE)
         if OS.PP.last_proc.__class__.__name__ == "Load":
             self.fillMemoryTable(RM.last_vm)
-        #if OS.PP.last_proc.__class__.__name__ == "Output":
-        #        self.printOutput()
+        if OS.PP.last_proc.__class__.__name__ == "Output":
+            self.printOutput()
         
         
     def loadBtnHandler(self):
@@ -374,10 +374,9 @@ class Frame(QtGui.QFrame):
                 items.setTextAlignment(count, self.center)
                 
     def printOutput(self):
-        
-        groupbox = self.groupboxesList[RM.current_vm.PAGE]
+        groupbox = self.groupboxesList[Output.vm.PAGE]
         outputbox = groupbox.children()[2].children()[1]
-        outputbox.insertPlainText(Output.String)
+        outputbox.insertPlainText(Output.stream)
         
     def moveSlider(self, proc):
         x = proc.PAGE

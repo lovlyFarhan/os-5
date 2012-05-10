@@ -13,5 +13,7 @@ class Output(Process):
     def run(self):
         vm, output = IOChannel.get_output()
         vm.state = State.BLOCKED
-        print(output, end='')
+        Output.stream = output
+        Output.vm = vm
+        #print(output, end='')
         self.state = State.BLOCKED
