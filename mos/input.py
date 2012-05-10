@@ -5,13 +5,11 @@ from rm import RM
 from io_channel import IOChannel
 
 
-class Output(Process):
+class Input(Process):
     
     def __init__(self):
         Process.__init__(self, state=State.BLOCKED, priority=Priority.HIGH)
         
     def run(self):
-        vm, output = IOChannel.get_output()
-        vm.state = State.BLOCKED
-        print(output, end='')
+        #RM.current_vm.state = State.READY
         self.state = State.BLOCKED

@@ -9,7 +9,7 @@ class Enum(set):
 
 
 #process will have working state
-State = Enum(["RUNNING", "BLOCKED", "READY", "ABORTED", "FINISHED"])
+State = Enum(["RUNNING", "BLOCKED", "READY", "ABORTED", "FINISHED", "WAITING"])
 
 #and priority
 Priority = Enum(["HIGH", "MEDIUM", "LOW"])

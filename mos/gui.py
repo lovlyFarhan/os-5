@@ -281,9 +281,11 @@ class Frame(QtGui.QFrame):
         return runAllBtn
 
     def run_all_btn_handler(self):
+
         if self.run_all == True:
+            self.run_all = True
             self.run_cycle_btn_handler()
-            self.runBtnHandler()
+            #self.runBtnHandler()
             self.run_all_btn_handler()
 
     def run_cycle_btn_handler(self):
@@ -335,8 +337,10 @@ class Frame(QtGui.QFrame):
             self.moveSlider(OS.PP.last_proc)
             self.fillVMTree(OS.PP.last_proc)
             self.fillMemoryTable(OS.PP.last_proc.PAGE)
-        if OS.PP.last_proc.__class__.__name__ == "Output":
-                self.printOutput()
+        if OS.PP.last_proc.__class__.__name__ == "Load":
+            self.fillMemoryTable(RM.last_vm)
+        #if OS.PP.last_proc.__class__.__name__ == "Output":
+        #        self.printOutput()
         
         
     def loadBtnHandler(self):

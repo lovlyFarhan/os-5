@@ -39,12 +39,14 @@ class Interrupt(Process):
             Process.find_by_name("Load").state = State.READY
         #perhaps those two will be optional
         if(RM.SI == 1):
-            RM.current_vm.state = State.BLOCKED
+            #RM.current_vm = None
             Process.find_by_name("Output").state = State.READY
-#            pass
+            RM.TI = 0
         #read
         elif(RM.SI == 2):
-            pass
+            #RM.current_vm = None
+            Process.find_by_name("Input").state = State.READY
+            RM.TI = 0
         #halt
         elif(RM.SI == 3):
             RM.current_vm.state = State.FINISHED
@@ -57,17 +59,16 @@ class Interrupt(Process):
         if(RM.TI == 0):
             #get all active vms
             vms = VM.get_active()
-            #for vm in vms:
-            #    print(vm, "   ", vm.PAGE)
             if vms != []:
-                #this vm already worked
-                vms[0].state = State.BLOCKED
-                #rotate vms list
-                VM.rotate()
-                #vms.append(vms.pop(0))
-                #make first ready
-                if vms.__len__() > 1:
-                    vms[1].state = State.READY
+                if vms.__len__() != 1:
+                    if RM.current_vm == None:              
+                        vms[0].state = State.READY
+                    else:
+                        vms[0].state = State.BLOCKED
+                        vms[1].state = State.READY
+                    #rotate vms list
+                    VM.rotate()
+               
                 else:
                     vms[0].state = State.READY
                 #set timer for vm

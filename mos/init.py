@@ -7,7 +7,7 @@ from interrupt import Interrupt
 from main import Main
 from watchdog import Watchdog
 from output import Output
-
+from input import Input
 
 
 #the father process of whole OS
@@ -25,5 +25,6 @@ class Init(Process):
         Main()
         Watchdog()
         Output()
+        Input()
         self.state = State.BLOCKED
 

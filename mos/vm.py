@@ -2,13 +2,14 @@
 from definitions import State
 from process import Process
 from rm import RM
+from io_channel import IOChannel
 
 
 #virtual machine - runs user's program
 class VM(Process):
     #all vms will be stored here
     list = []
-    Output = ""
+    #Output = ""
 
     def rotate():
         VM.list.append(VM.list.pop(0))
@@ -17,7 +18,7 @@ class VM(Process):
     def get_active():
         active = []
         for proc in VM.list:
-            if proc.state != State.FINISHED and proc.state != State.ABORTED:
+            if proc.state == State.BLOCKED or proc.state == State.READY:
                 active.append(proc)
 
         return active
@@ -75,9 +76,8 @@ class VM(Process):
         elif(DR == 'ECHO'):
             #interrupt???
             RM.SI = 1
-            VM.Output = str(RM.memory[self.SP])
-#            RM.Output = str(RM.memory[self.SP])
-#            print(str(RM.memory[self.SP]), end="")
+            IOChannel.send_output(self, str(RM.memory[self.SP]))
+            self.state = State.WAITING
             self.SP -= 1 
         elif(DR == 'AND'):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) & int(RM.memory[self.SP])
@@ -87,8 +87,10 @@ class VM(Process):
             self.SP -= 1
         elif(DR == 'READ'):
             #interrupt???
+            RM.SI = 2
+            self.state = State.WAITING
+            #RM.memory[self.SP] = input()
             self.SP += 1
-            RM.memory[self.SP] = input()
         elif(DR == 'CMP'):
             if (int(RM.memory[self.SP - 1]) == int(RM.memory[self.SP])):
                 RM.memory[self.SP - 1] = 1
@@ -124,6 +126,7 @@ class VM(Process):
             #wrong command
             RM.PI = 1
 
-        self.state = State.READY
+        if self.state != State.WAITING:
+            self.state = State.READY
              
 
