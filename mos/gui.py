@@ -386,11 +386,6 @@ class Frame(QtGui.QFrame):
         outputbox = groupbox.children()[3].children()[1]
         outputbox.insertPlainText(Output.stream)
         
-    def sendInput(self):
-        groupbox = self.groupboxesList[Input.vm.PAGE]
-        self.currentInputbox = groupbox.children()[2].children()[1]
-        self.currentInputbox.setEnabled(True)
-        
     def moveSlider(self, proc):
         x = proc.PAGE
         self.scrollBar.setSliderPosition(403 * x)

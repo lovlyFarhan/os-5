@@ -14,7 +14,7 @@ class Input(Process):
         #RM.current_vm.state = State.READY
         Input.vmNr = RM.current_vm.PAGE
         
-        
+        #
         if IOChannel.input_buffer.__len__() != 0:
             vm, rcvStream = IOChannel.get_input()
             RM.memory[vm.SP] = rcvStream
