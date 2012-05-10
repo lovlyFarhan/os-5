@@ -88,6 +88,7 @@ class VM(Process):
         elif(DR == 'READ'):
             #interrupt???
             RM.SI = 2
+#            IOChannel.send_input(self, "nothing")
             self.state = State.WAITING
             #RM.memory[self.SP] = input()
             self.SP += 1

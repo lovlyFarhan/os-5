@@ -15,5 +15,4 @@ class Output(Process):
         vm.state = State.BLOCKED
         Output.stream = output
         Output.vm = vm
-        #print(output, end='')
         self.state = State.BLOCKED

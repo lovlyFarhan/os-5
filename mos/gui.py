@@ -1,11 +1,14 @@
 from PySide import QtGui, QtCore
+from definitions import State
 from init import Init
 from process import Process
+from vm import VM
 from rm import RM
 from vata_os import OS
 from load import Load
-from vm import VM
 from output import Output
+from input import Input
+from io_channel import IOChannel
 
 
 class Frame(QtGui.QFrame):
@@ -29,6 +32,7 @@ class Frame(QtGui.QFrame):
         self.fillProcessTree()
         self.move(self.frameGeometry().topLeft())
         self.setWindowTitle('VATA OS')
+        self.setMinimumHeight(450)
         self.show()
         
         
@@ -74,7 +78,7 @@ class Frame(QtGui.QFrame):
         scroll.setWidgetResizable(True)  
         scroll.setWidget(scrollwidget)
         
-        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+#        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         
         scroll.setVerticalScrollBar(self.scrollBar)
         
@@ -85,8 +89,8 @@ class Frame(QtGui.QFrame):
             groupbox.setMinimumHeight(395)
             grouplayout = QtGui.QVBoxLayout()
             grouplayout.addWidget(self.createRegisterTree())
-            grouplayout.addWidget(self.createOutputBox())
             grouplayout.addWidget(self.createInputBox())
+            grouplayout.addWidget(self.createOutputBox())
             groupbox.setLayout(grouplayout)
             scrolllayout.addWidget(groupbox)
             self.groupboxesList.append(groupbox)
@@ -171,12 +175,13 @@ class Frame(QtGui.QFrame):
     
     def createInputBox(self):
         groupBox = QtGui.QGroupBox("Input")
-        output = QtGui.QTextEdit(self)
+        self.inputBox = QtGui.QLineEdit(self)
+        self.inputBox.returnPressed.connect(self.inputHandler)
+        self.inputBox.setEnabled(False)
 #        output.setMaximumWidth(198)    
 #        output.setMaximumHeight(50)
-        output.setReadOnly(True)
         vbox = QtGui.QVBoxLayout()
-        vbox.addWidget(output)
+        vbox.addWidget(self.inputBox)
         groupBox.setMaximumWidth(169)    
         groupBox.setMaximumHeight(70)
         groupBox.setLayout(vbox)
@@ -328,6 +333,7 @@ class Frame(QtGui.QFrame):
         self.updateInteruptBox()
       
     def runBtnHandler(self):
+        
         self.loadBtn.setEnabled(True)
         self.run_all = False
         OS.PP.run_once()
@@ -341,6 +347,8 @@ class Frame(QtGui.QFrame):
             self.fillMemoryTable(RM.last_vm)
         if OS.PP.last_proc.__class__.__name__ == "Output":
             self.printOutput()
+        if OS.PP.last_proc.__class__.__name__ == "Input":
+            self.groupboxesList[Input.vmNr].children()[2].children()[1].setEnabled(True)
         
         
     def loadBtnHandler(self):
@@ -375,12 +383,24 @@ class Frame(QtGui.QFrame):
                 
     def printOutput(self):
         groupbox = self.groupboxesList[Output.vm.PAGE]
-        outputbox = groupbox.children()[2].children()[1]
+        outputbox = groupbox.children()[3].children()[1]
         outputbox.insertPlainText(Output.stream)
+        
+    def sendInput(self):
+        groupbox = self.groupboxesList[Input.vm.PAGE]
+        self.currentInputbox = groupbox.children()[2].children()[1]
+        self.currentInputbox.setEnabled(True)
         
     def moveSlider(self, proc):
         x = proc.PAGE
-        self.scrollBar.setSliderPosition(402 * x)
+        self.scrollBar.setSliderPosition(403 * x)
+    
+    def inputHandler(self):
+        sender = self.sender()
+        senderVM = self.groupboxesList.index(sender.parent().parent())
+        IOChannel.send_input(VM.list[senderVM], sender.text())
+        Process.find_by_name("Input").state = State.READY
+        sender.setEnabled(False)
         
 if __name__ == '__main__':
 

@@ -12,4 +12,14 @@ class Input(Process):
         
     def run(self):
         #RM.current_vm.state = State.READY
-        self.state = State.BLOCKED
+        Input.vmNr = RM.current_vm.PAGE
+        
+        
+        if IOChannel.input_buffer.__len__() != 0:
+            vm, rcvStream = IOChannel.get_input()
+            RM.memory[vm.SP] = rcvStream
+            vm.state = State.READY
+        
+        
+        
+        self.state = State.WAITING
