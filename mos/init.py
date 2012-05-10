@@ -6,6 +6,7 @@ from load import Load
 from interrupt import Interrupt
 from main import Main
 from watchdog import Watchdog
+from output import Output
 
 
 
@@ -23,5 +24,6 @@ class Init(Process):
         Interrupt()
         Main()
         Watchdog()
+        Output()
         self.state = State.BLOCKED
 

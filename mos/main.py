@@ -12,6 +12,6 @@ class Main(Process):
 
     #creates new VM process
     def run(self):
-         VM()
-         self.state = State.BLOCKED
+        VM()
+        self.state = State.BLOCKED
 

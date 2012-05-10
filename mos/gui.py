@@ -5,16 +5,19 @@ from rm import RM
 from vata_os import OS
 from load import Load
 from vm import VM
+from output import Output
 
 
-class Frame(QtGui.QWidget):
+class Frame(QtGui.QFrame):
     
     def __init__(self, parent=None):
         super(Frame, self).__init__(parent)
         self.run_all = True
         
+#        self.setFrameStyle(QtGui.QFrame.StyledPanel)
+#        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
-        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Windows'))
+        QtGui.QApplication.setStyle("Windows")
         QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
         self.col = QtGui.QColor(159, 182, 205)
         
@@ -58,6 +61,9 @@ class Frame(QtGui.QWidget):
         return rightFrame
     
     def createVMview(self):
+        
+        self.scrollBar = QtGui.QScrollBar()
+        
         dialog = QtGui.QDialog()
         scrolllayout = QtGui.QVBoxLayout()
 
@@ -65,12 +71,18 @@ class Frame(QtGui.QWidget):
         scrollwidget.setLayout(scrolllayout)
 
         scroll = QtGui.QScrollArea()
-        scroll.setWidgetResizable(True)  # Set to make the inner widget resize with scroll area
+        scroll.setWidgetResizable(True)  
         scroll.setWidget(scrollwidget)
+        
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        
+        scroll.setVerticalScrollBar(self.scrollBar)
+        
 
-        self.groupboxesList = []  # Keep a reference to groupboxes for later use
+        self.groupboxesList = []  
         for i in range(16):    
             groupbox = QtGui.QGroupBox("VM #" + '%d' % i)
+            groupbox.setMinimumHeight(395)
             grouplayout = QtGui.QVBoxLayout()
             grouplayout.addWidget(self.createRegisterTree())
             grouplayout.addWidget(self.createOutputBox())
@@ -78,12 +90,14 @@ class Frame(QtGui.QWidget):
             groupbox.setLayout(grouplayout)
             scrolllayout.addWidget(groupbox)
             self.groupboxesList.append(groupbox)
+        
+        groupbox.setMaximumHeight(100)
         layout = QtGui.QHBoxLayout()
         layout.addWidget(scroll)
         dialog.setLayout(layout)
         dialog.setMinimumWidth(250)
         dialog.setMaximumWidth(250)
-           
+        
         return dialog
     
     def createMemoryTable(self):
@@ -144,7 +158,7 @@ class Frame(QtGui.QWidget):
     def createOutputBox(self):
         groupBox = QtGui.QGroupBox("Output")
         groupBox.setMaximumWidth(169)    
-        groupBox.setMaximumHeight(70)
+        groupBox.setMaximumHeight(120)
         output = QtGui.QTextEdit(self)
 #        output.setMaximumWidth(198)    
 #        output.setMaximumHeight(100)
@@ -241,7 +255,7 @@ class Frame(QtGui.QWidget):
     def createCloseBtn(self):
         closeBtn = QtGui.QPushButton()
         closeBtn.setText("CLOSE")
-#        loadBtn.clicked.connect(self.run_btn_handler)
+        closeBtn.clicked.connect(self.closeBtnHandler)
         
         return closeBtn
     
@@ -318,12 +332,18 @@ class Frame(QtGui.QWidget):
         self.fillProcessTree()
         self.updateInteruptBox()
         if OS.PP.last_proc.__class__.__name__ == "VM":
+            self.moveSlider(OS.PP.last_proc)
             self.fillVMTree(OS.PP.last_proc)
-            self.fillMemoryTable(OS.PP.last_proc.PAGE) 
+            self.fillMemoryTable(OS.PP.last_proc.PAGE)
+        if OS.PP.last_proc.__class__.__name__ == "Output":
+                self.printOutput()
+        
         
     def loadBtnHandler(self):
         self.createFileDialog()
         
+    def closeBtnHandler(self):
+        sys.exit()
         
     def fillMemoryTable(self, vm_page):
         pptr = vm_page * 256
@@ -348,6 +368,16 @@ class Frame(QtGui.QWidget):
             items = QtGui.QTreeWidgetItem(registerTree, values)
             for count in range(registerTree.columnCount()):
                 items.setTextAlignment(count, self.center)
+                
+    def printOutput(self):
+        
+        groupbox = self.groupboxesList[RM.current_vm.PAGE]
+        outputbox = groupbox.children()[2].children()[1]
+        outputbox.insertPlainText(Output.String)
+        
+    def moveSlider(self, proc):
+        x = proc.PAGE
+        self.scrollBar.setSliderPosition(402 * x)
         
 if __name__ == '__main__':
 

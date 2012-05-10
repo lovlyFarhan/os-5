@@ -8,6 +8,7 @@ from rm import RM
 class VM(Process):
     #all vms will be stored here
     list = []
+    Output = ""
 
     def rotate():
         VM.list.append(VM.list.pop(0))
@@ -73,7 +74,10 @@ class VM(Process):
             self.SP -= 1
         elif(DR == 'ECHO'):
             #interrupt???
-            print(str(RM.memory[self.SP]), end="")
+            RM.SI = 1
+            VM.Output = str(RM.memory[self.SP])
+#            RM.Output = str(RM.memory[self.SP])
+#            print(str(RM.memory[self.SP]), end="")
             self.SP -= 1 
         elif(DR == 'AND'):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) & int(RM.memory[self.SP])
