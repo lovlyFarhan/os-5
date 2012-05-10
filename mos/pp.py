@@ -33,11 +33,19 @@ class ProcessPlaner():
             
             
     def run_cycle(self):
+        if self.procs == []:
+            self.procs = self.sort_by_priority()
+        
+        vms = []
         for proc in self.procs:
             if proc.state == State.READY:
                 proc.state = State.RUNNING
                 proc.run()
-
+                if proc.__class__.__name__ == "VM":
+                    vms.append(proc)
+                ProcessPlaner.last_proc = proc
+        self.procs = [] 
+        return vms
 
     def sort_by_priority(self):
         hpl = []

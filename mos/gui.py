@@ -11,7 +11,7 @@ class Frame(QtGui.QWidget):
     
     def __init__(self, parent=None):
         super(Frame, self).__init__(parent)
-        
+        self.run_all = True
         
         
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Windows'))
@@ -24,7 +24,6 @@ class Frame(QtGui.QWidget):
         self.setLayout(mainGrid)
         
         self.fillProcessTree()
-        
         self.move(self.frameGeometry().topLeft())
         self.setWindowTitle('VATA OS')
         self.show()
@@ -256,17 +255,32 @@ class Frame(QtGui.QWidget):
     def createRunCycleBtn(self):
         runCycleBtn = QtGui.QPushButton()
         runCycleBtn.setText("RUN CYCLE")
-#        loadBtn.clicked.connect(self.run_btn_handler)
+        runCycleBtn.clicked.connect(self.run_cycle_btn_handler)
         
         return runCycleBtn
     
     def createRunAllBtn(self):
         runAllBtn = QtGui.QPushButton()
         runAllBtn.setText("RUN ALL")
-#        loadBtn.clicked.connect(self.run_btn_handler)
+        runAllBtn.clicked.connect(self.run_all_btn_handler)
         
         return runAllBtn
-    
+
+    def run_all_btn_handler(self):
+        if self.run_all == True:
+            self.run_cycle_btn_handler()
+            self.runBtnHandler()
+            self.run_all_btn_handler()
+
+    def run_cycle_btn_handler(self):
+        self.loadBtn.setEnabled(True)
+        vms = OS.PP.run_cycle()
+        self.fillProcessTree()
+        self.updateInteruptBox()
+        for vm in vms:
+            self.fillVMTree(vm)
+            self.fillMemoryTable(vm.PAGE)
+
     def fillProcessTree(self):
         self.processTree.clear()
         processList = []
@@ -295,10 +309,11 @@ class Frame(QtGui.QWidget):
         self.fileName, _ = fDialog.getOpenFileName(self, 'Open file', directory, "*.pr")
         Load.filename = self.fileName
         RM.PI = 5
-    
+        self.updateInteruptBox()
       
     def runBtnHandler(self):
         self.loadBtn.setEnabled(True)
+        self.run_all = False
         OS.PP.run_once()
         self.fillProcessTree()
         self.updateInteruptBox()
