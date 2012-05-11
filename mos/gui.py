@@ -1,4 +1,5 @@
 from PySide import QtGui, QtCore
+import os
 from process import Process
 from vm import VM
 from rm import RM
@@ -76,7 +77,7 @@ class Frame(QtGui.QFrame):
         scroll.setWidgetResizable(True)  
         scroll.setWidget(scrollwidget)
         
-#        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         
         scroll.setVerticalScrollBar(self.scrollBar)
         
@@ -93,7 +94,6 @@ class Frame(QtGui.QFrame):
             scrolllayout.addWidget(groupbox)
             self.groupboxesList.append(groupbox)
         
-        groupbox.setMaximumHeight(100)
         layout = QtGui.QHBoxLayout()
         layout.addWidget(scroll)
         dialog.setLayout(layout)
@@ -326,8 +326,9 @@ class Frame(QtGui.QFrame):
         directory = QtCore.QDir.currentPath() + "/jobs"
         fDialog = QtGui.QFileDialog()
         self.fileName, _ = fDialog.getOpenFileName(self, 'Open file', directory, "*.pr")
-        Load.filename = self.fileName
-        RM.PI = 5
+        if os.path.exists(self.fileName):
+            Load.filename = self.fileName
+            RM.PI = 5
         self.updateInteruptBox()
       
     def runBtnHandler(self):
