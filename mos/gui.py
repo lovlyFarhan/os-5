@@ -345,7 +345,7 @@ class Frame(QtGui.QFrame):
             self.fillMemoryTable(RM.last_vm)
         if OS.PP.last_proc.__class__.__name__ == "Output":
             self.printOutput()
-        if OS.PP.last_proc.__class__.__name__ == "Input" and Input.vm_pages != None:
+        if OS.PP.last_proc.__class__.__name__ == "Input" and Input.vm_page != None:
             self.groupboxesList[Input.vm_page].children()[2].children()[1].setEnabled(True)
         
         
