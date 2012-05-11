@@ -60,7 +60,7 @@ class Interrupt(Process):
             #get all active vms
             vms = VM.get_active()
             if vms != []:
-                if vms.__len__() != 1:
+                if vms.__len__() > 1:
                     if RM.current_vm == None:              
                         vms[0].state = State.READY
                     else:

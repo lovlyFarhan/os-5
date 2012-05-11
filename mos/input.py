@@ -1,8 +1,9 @@
+
 from definitions import State
 from process import Process
 from definitions import Priority
-from rm import RM
 from io_channel import IOChannel
+from rm import RM
 
 
 class Input(Process):
@@ -11,15 +12,18 @@ class Input(Process):
         Process.__init__(self, state=State.BLOCKED, priority=Priority.HIGH)
         
     def run(self):
-        #RM.current_vm.state = State.READY
-        Input.vmNr = RM.current_vm.PAGE
-        
-        #
-        if IOChannel.input_buffer.__len__() != 0:
-            vm, rcvStream = IOChannel.get_input()
-            RM.memory[vm.SP] = rcvStream
-            vm.state = State.READY
-        
-        
-        
-        self.state = State.WAITING
+        input_waiting_vm = IOChannel.input_waiting_queue[0]
+        input = IOChannel.input_buffer.get(input_waiting_vm)
+        if input != None:
+            vm_sp = input_waiting_vm.PAGE * 256 + input_waiting_vm.SP
+            RM.memory[vm_sp] = input
+            input_waiting_vm.state = State.BLOCKED
+            IOChannel.input_waiting_queue.pop(0)
+            if IOChannel.rotate_iwq():
+                self.state = State.BLOCKED
+        else:
+            Input.vm_page = input_waiting_vm.PAGE
+            self.state = State.READY
+
+
+

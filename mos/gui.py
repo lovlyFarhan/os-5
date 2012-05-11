@@ -348,14 +348,14 @@ class Frame(QtGui.QFrame):
         if OS.PP.last_proc.__class__.__name__ == "Output":
             self.printOutput()
         if OS.PP.last_proc.__class__.__name__ == "Input":
-            self.groupboxesList[Input.vmNr].children()[2].children()[1].setEnabled(True)
+            self.groupboxesList[Input.vm_page].children()[2].children()[1].setEnabled(True)
         
         
     def loadBtnHandler(self):
         self.createFileDialog()
         
     def closeBtnHandler(self):
-        sys.exit()
+        exit()
         
     def fillMemoryTable(self, vm_page):
         pptr = vm_page * 256
@@ -394,7 +394,6 @@ class Frame(QtGui.QFrame):
         sender = self.sender()
         senderVM = self.groupboxesList.index(sender.parent().parent())
         IOChannel.send_input(VM.list[senderVM], sender.text())
-        Process.find_by_name("Input").state = State.READY
         sender.setEnabled(False)
         
 if __name__ == '__main__':

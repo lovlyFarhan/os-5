@@ -1,7 +1,7 @@
+
 from definitions import State
 from process import Process
 from definitions import Priority
-from rm import RM
 from io_channel import IOChannel
 
 
@@ -15,4 +15,5 @@ class Output(Process):
         vm.state = State.BLOCKED
         Output.stream = output
         Output.vm = vm
-        self.state = State.BLOCKED
+        if IOChannel.output_buffer == {}:
+            self.state = State.BLOCKED

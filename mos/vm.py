@@ -23,6 +23,11 @@ class VM(Process):
 
         return active
 
+    #def get_by_page(page):
+    #    for vm in VM.list:
+    #        if vm.page == page:
+    #            return vm
+
 
     def __init__(self, **args):
         Process.__init__(self, **args)
@@ -74,7 +79,6 @@ class VM(Process):
                 RM.memory[self.SP - 1] = int(int(RM.memory[self.SP - 1]) / int(RM.memory[self.SP]))
             self.SP -= 1
         elif(DR == 'ECHO'):
-            #interrupt???
             RM.SI = 1
             IOChannel.send_output(self, str(RM.memory[self.SP]))
             self.state = State.WAITING
@@ -86,9 +90,8 @@ class VM(Process):
             RM.memory[self.SP - 1] = int(RM.memory[self.SP - 1]) | int(RM.memory[self.SP])
             self.SP -= 1
         elif(DR == 'READ'):
-            #interrupt???
             RM.SI = 2
-#            IOChannel.send_input(self, "nothing")
+            IOChannel.send_input_request(self)
             self.state = State.WAITING
             #RM.memory[self.SP] = input()
             self.SP += 1
