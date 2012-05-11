@@ -93,7 +93,6 @@ class VM(Process):
             RM.SI = 2
             IOChannel.send_input_request(self)
             self.state = State.WAITING
-            #RM.memory[self.SP] = input()
             self.SP += 1
         elif(DR == 'CMP'):
             if (int(RM.memory[self.SP - 1]) == int(RM.memory[self.SP])):
