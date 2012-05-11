@@ -1,6 +1,4 @@
 from PySide import QtGui, QtCore
-from definitions import State
-from init import Init
 from process import Process
 from vm import VM
 from rm import RM
@@ -347,7 +345,7 @@ class Frame(QtGui.QFrame):
             self.fillMemoryTable(RM.last_vm)
         if OS.PP.last_proc.__class__.__name__ == "Output":
             self.printOutput()
-        if OS.PP.last_proc.__class__.__name__ == "Input":
+        if OS.PP.last_proc.__class__.__name__ == "Input" and Input.vm_page != None:
             self.groupboxesList[Input.vm_page].children()[2].children()[1].setEnabled(True)
         
         
@@ -395,12 +393,10 @@ class Frame(QtGui.QFrame):
         senderVM = self.groupboxesList.index(sender.parent().parent())
         IOChannel.send_input(VM.list[senderVM], sender.text())
         sender.setEnabled(False)
+        sender.clear()
         
 if __name__ == '__main__':
-
-    import sys
-
-    myApp = QtGui.QApplication(sys.argv)
+    myApp = QtGui.QApplication([])
     gui = Frame()
-    sys.exit(myApp.exec_())
+    myApp.exec_()
     
