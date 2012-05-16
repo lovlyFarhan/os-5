@@ -3,6 +3,7 @@ from process import Process
 from rm import RM
 from definitions import Priority
 from definitions import State
+from definitions import WD_counter
 
 
 #it should load user's program's instuction to virtual memory
@@ -23,7 +24,7 @@ class Load(Process):
             vm_addr = vm_page * RM.VM_SIZE
             DS = commands[1:commands.index("CODE")]
             CS = commands[commands.index("CODE") + 1:]
-            RM.last_vm_lc = CS.__len__() * 10
+            RM.last_vm_lc = CS.__len__() * WD_counter
             DS_ptr = vm_addr
             CS_ptr = vm_addr + 64 
             #fill data segment

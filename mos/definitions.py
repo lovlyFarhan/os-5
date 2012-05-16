@@ -17,3 +17,8 @@ Priority = Enum(["HIGH", "MEDIUM", "LOW"])
 
 #period for vm execution
 TIMER_PERIOD = 10
+
+
+
+#watchdog counter
+WD_counter = 10

@@ -13,8 +13,7 @@ class RM():
     last_vm = None
     last_vm_lc = None
     current_vm = None
-    # "resource" 
-    Output = ""
+    error_flag = False
 
     #virtual memory
     memory = {i : "" for i in range(MAX_VMS * VM_SIZE)}
