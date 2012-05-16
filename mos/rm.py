@@ -52,5 +52,6 @@ class RM():
 
 
     def get_error():
-        return RM.error_msg
         RM.error_flag = False
+        return RM.error_msg
+        
