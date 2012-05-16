@@ -42,4 +42,16 @@ class RM():
                     RM.memory[empty_pos] = str(i)
                     return i
 
+    
+    def send_error(msg):
+        RM.error_msg = msg
+        RM.error_flag = True
+        
 
+    def was_error():
+        return RM.error_flag
+
+
+    def get_error():
+        return RM.error_msg
+        RM.error_flag = False

@@ -23,11 +23,6 @@ class VM(Process):
 
         return active
 
-    #def get_by_page(page):
-    #    for vm in VM.list:
-    #        if vm.page == page:
-    #            return vm
-
 
     def __init__(self, **args):
         Process.__init__(self, **args)

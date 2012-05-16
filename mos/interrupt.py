@@ -22,29 +22,27 @@ class Interrupt(Process):
     def run(self):
         #wrong operation
         if(RM.PI == 1):
-            print("wrong operation in ", RM.current_vm.PAGE)
+            RM.send_error("wrong operation in " + str(RM.current_vm.PAGE))
             Interrupt.kill_vm()   
         #division by zero
         elif(RM.PI == 2):
-            print("division by zero in ", RM.current_vm.PAGE)
+            RM.send_error("division by zero in " + str(RM.current_vm.PAGE))
             Interrupt.kill_vm()
         #error while loading user's program
         elif(RM.PI == 3):
-            print("error while trying to load ", Load.filename)
+            RM.send_error("error while trying to load ", + Load.filename)
         #success loading user's program
         elif(RM.PI == 4):
             Process.find_by_name("Main").state = State.READY
         #test
         elif(RM.PI == 5):
             Process.find_by_name("Load").state = State.READY
-        #perhaps those two will be optional
+        #io operations
         if(RM.SI == 1):
-            #RM.current_vm = None
             Process.find_by_name("Output").state = State.READY
             RM.TI = 0
         #read
         elif(RM.SI == 2):
-            #RM.current_vm = None
             Process.find_by_name("Input").state = State.READY
             RM.TI = 0
         #halt
@@ -61,7 +59,7 @@ class Interrupt(Process):
             vms = VM.get_active()
             if vms != []:
                 if vms.__len__() > 1:
-                    if RM.current_vm == None:              
+                    if RM.current_vm == None: 
                         vms[0].state = State.READY
                     else:
                         vms[0].state = State.BLOCKED

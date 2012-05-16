@@ -338,16 +338,22 @@ class Frame(QtGui.QFrame):
         OS.PP.run_once()
         self.fillProcessTree()
         self.updateInteruptBox()
-        if OS.PP.last_proc.__class__.__name__ == "VM":
-            self.moveSlider(OS.PP.last_proc)
-            self.fillVMTree(OS.PP.last_proc)
-            self.fillMemoryTable(OS.PP.last_proc.PAGE)
-        if OS.PP.last_proc.__class__.__name__ == "Load":
-            self.fillMemoryTable(RM.last_vm)
-        if OS.PP.last_proc.__class__.__name__ == "Output":
-            self.printOutput()
-        if OS.PP.last_proc.__class__.__name__ == "Input" and Input.vm_page != None:
-            self.groupboxesList[Input.vm_page].children()[2].children()[1].setEnabled(True)
+
+        if RM.was_error():
+            pass
+            #throw msg box => RM.get_error()
+        else:
+
+            if OS.PP.last_proc.__class__.__name__ == "VM":
+                self.moveSlider(OS.PP.last_proc)
+                self.fillVMTree(OS.PP.last_proc)
+                self.fillMemoryTable(OS.PP.last_proc.PAGE)
+            if OS.PP.last_proc.__class__.__name__ == "Load":
+                self.fillMemoryTable(RM.last_vm)
+            if OS.PP.last_proc.__class__.__name__ == "Output":
+                self.printOutput()
+            if OS.PP.last_proc.__class__.__name__ == "Input" and Input.vm_page != None:
+                self.groupboxesList[Input.vm_page].children()[2].children()[1].setEnabled(True)
         
         
     def loadBtnHandler(self):
