@@ -30,7 +30,7 @@ class Interrupt(Process):
             Interrupt.kill_vm()
         #error while loading user's program
         elif(RM.PI == 3):
-            RM.send_error("error while trying to load ", + Load.filename)
+            RM.send_error("error while trying to load " + Load.filename)
         #success loading user's program
         elif(RM.PI == 4):
             Process.find_by_name("Main").state = State.READY
