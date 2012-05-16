@@ -52,12 +52,12 @@ class Frame(QtGui.QFrame):
         
         rightGrid = QtGui.QGridLayout()
         rightGrid.addWidget(self.createProcessTree(), 0, 0, 1, 4) 
-        rightGrid.addWidget(self.createInteruptBox(), 1, 0, 1, 2) 
+        rightGrid.addWidget(self.createInteruptBox(), 1, 0, 2, 2) 
         rightGrid.addWidget(self.createLoadBtn(), 1, 2) 
         rightGrid.addWidget(self.createCloseBtn(), 1, 3) 
-        rightGrid.addWidget(self.createRunBtn(), 2, 0, 1, 2)
-        rightGrid.addWidget(self.createRunCycleBtn(), 2, 2)
-        rightGrid.addWidget(self.createRunAllBtn(), 2, 3)
+        rightGrid.addWidget(self.createRunBtn(), 2, 2, 1, 2)
+#        rightGrid.addWidget(self.createRunCycleBtn(), 2, 2)
+#        rightGrid.addWidget(self.createRunAllBtn(), 2, 3)
         rightFrame.setLayout(rightGrid)
         rightFrame.setMaximumWidth(400)
         
