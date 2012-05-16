@@ -340,8 +340,7 @@ class Frame(QtGui.QFrame):
         self.updateInteruptBox()
 
         if RM.was_error():
-            pass
-            #throw msg box => RM.get_error()
+            self.msgBox(RM.get_error())
         else:
 
             if OS.PP.last_proc.__class__.__name__ == "VM":
@@ -401,6 +400,9 @@ class Frame(QtGui.QFrame):
         IOChannel.send_input(VM.list[senderVM], sender.text())
         sender.setEnabled(False)
         sender.clear()
+        
+    def msgBox(self, exception):
+        QtGui.QMessageBox.critical(self, "Error", exception, QtGui.QMessageBox.Warning)
         
 if __name__ == '__main__':
     myApp = QtGui.QApplication([])
