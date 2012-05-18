@@ -23,6 +23,10 @@ class VM(Process):
 
         return active
 
+    def put_to_end(self):
+        index = VM.index(self)
+        VM.list(append(VM.list.pop(index)))
+
 
     def __init__(self, **args):
         Process.__init__(self, **args)

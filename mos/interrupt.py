@@ -22,11 +22,11 @@ class Interrupt(Process):
     def run(self):
         #wrong operation
         if(RM.PI == 1):
-            RM.send_error("wrong operation in " + str(RM.current_vm.PAGE))
+            RM.send_error("wrong operation in " + str(RM.current_vm.PAGE) + " virtual machine")
             Interrupt.kill_vm()   
         #division by zero
         elif(RM.PI == 2):
-            RM.send_error("division by zero in " + str(RM.current_vm.PAGE))
+            RM.send_error("division by zero in " + str(RM.current_vm.PAGE) + " virtual machine")
             Interrupt.kill_vm()
         #error while loading user's program
         elif(RM.PI == 3):
@@ -52,6 +52,7 @@ class Interrupt(Process):
             RM.TI = 0
         #watchdog
         elif(RM.SI == 4):
+            RM.send_error("Watchdog detected and terminated " + str(RM.current_vm.PAGE) + " virtual machine")
             Interrupt.kill_vm()
         #timer
         if(RM.TI == 0):
@@ -59,13 +60,26 @@ class Interrupt(Process):
             vms = VM.get_active()
             if vms != []:
                 if vms.__len__() > 1:
-                    if RM.current_vm == None: 
+                    if vms[0].state == State.READY:
+                        vms[0].state = State.BLOCKED
+                        vms[1].state = State.READY
+                    else:
+                        vms[0].state = State.READY
+                        vms[1].state = State.BLOCKED
+                    VM.rotate()
+                    """
+                    if RM.current_vm == None:
+                        print("i was ", vms[0].state)
                         vms[0].state = State.READY
                     else:
+                        print("----------")
+                        print("i am 0, i was ", vms[0].state)
+                        print("i am 1, i was ", vms[1].state)
                         vms[0].state = State.BLOCKED
                         vms[1].state = State.READY
                     #rotate vms list
-                    VM.rotate()
+                        VM.rotate()
+                    """
                
                 else:
                     vms[0].state = State.READY

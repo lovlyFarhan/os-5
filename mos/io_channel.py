@@ -6,7 +6,6 @@ class IOChannel:
     input_waiting_queue = []
 
     def send_input(vm, input_stream):
-        print(input_stream)
         IOChannel.input_buffer[vm] = input_stream
 
     def send_output(vm, output_stream):
